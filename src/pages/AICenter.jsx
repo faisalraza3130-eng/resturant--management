@@ -1,13 +1,12 @@
 import React from 'react';
 import { money } from '../utils';
 
-const AICenter = ({ inventory, orders, menu, staff }) => {
+const AICenter = ({ inventory, orders, menu }) => {
 
   // --- Model 1: Sales Demand Forecaster ---
   const calculateForecast = () => {
-    const totalSales = orders.reduce((sum, o) => sum + (o.paid ? 1200 : 0), 45000); // Simulated baseline
+    const totalSales = orders.reduce((sum, o) => sum + (o.paid ? 1200 : 0), 45000);
     return {
-      current: totalSales,
       projected: totalSales * 1.15,
       confidence: '94%'
     };
@@ -21,24 +20,25 @@ const AICenter = ({ inventory, orders, menu, staff }) => {
     return { ...item, daysLeft, risk: daysLeft < 5 ? 'High' : 'Low' };
   }).sort((a, b) => a.daysLeft - b.daysLeft);
 
-  // --- Model 3: Menu Profitability Matrix (BCG) ---
+  // --- Model 3: Menu Profitability Matrix ---
   const menuMatrix = menu.map(item => {
     const sales = (item.id * 5) + Math.floor(Math.random() * 10);
-    let type = 'Star'; // High Profit, High Popularity
+    let type = 'Star';
     let color = 'var(--green)';
-
     if (sales < 10) { type = 'Dog'; color = 'var(--red)'; }
     else if (item.price < 15) { type = 'Plowhorse'; color = 'var(--blue)'; }
-
     return { ...item, sales, type, color };
   });
 
   // --- Model 4: Labor Peak-Time Predictor ---
   const peaks = [
     { time: '1:00 PM - 3:00 PM', load: 'Peak', staffNeeded: 4 },
-    { time: '7:00 PM - 9:00 PM', load: 'Very High', staffNeeded: 6 },
-    { time: '4:00 PM - 6:00 PM', load: 'Moderate', staffNeeded: 3 }
+    { time: '7:00 PM - 9:00 PM', load: 'Very High', staffNeeded: 6 }
   ];
+
+  const handleApply = (modelName) => {
+    alert(`AI Suggestion Applied: ${modelName} optimizations are now active in your workspace.`);
+  };
 
   return (
     <section className="page active">
@@ -54,133 +54,105 @@ const AICenter = ({ inventory, orders, menu, staff }) => {
         </div>
       </div>
 
-      {/* Model 1 & 4 Summary Cards */}
-      <div className="stats">
-        <div className="card stat">
-          <span className="stat-label">Sales Forecast (Next 7d)</span>
-          <strong className="stat-value">{money(salesForecast.projected)}</strong>
-          <span className="stat-change">Confidence: {salesForecast.confidence}</span>
-        </div>
-        <div className="card stat">
-          <span className="stat-label">Predicted Peak Today</span>
-          <strong className="stat-value" style={{ fontSize: '18px', marginTop: '10px' }}>7:00 PM - 9:00 PM</strong>
-          <span className="stat-change neutral">Expected Load: Very High</span>
-        </div>
-        <div className="card stat">
-          <span className="stat-label">Menu Efficiency</span>
-          <strong className="stat-value">88%</strong>
-          <span className="stat-change">↑ 3% from last month</span>
-        </div>
-        <div className="card stat">
-          <span className="stat-label">Stock Health Index</span>
-          <strong className="stat-value">Good</strong>
-          <span className="stat-change">2 items need restock</span>
-        </div>
-      </div>
+      <div style={{ display: 'grid', gap: '25px' }}>
 
-      <div className="section-grid two">
-
-        {/* Model 2: Inventory Engine Table */}
-        <div className="card">
-          <div className="card-title">
-            <h3>1. Inventory Depletion Model</h3>
-            <span className="muted">Predictive Restock</span>
+        {/* Model 1: Sales Demand Forecaster */}
+        <div className="card" style={{ padding: '20px' }}>
+          <div className="card-title" style={{ padding: '0 0 15px 0', borderBottom: '1px solid var(--line)' }}>
+            <h3 style={{ color: 'var(--blue)' }}>Model 1: Sales Demand Forecaster</h3>
+            <span className="badge info">Prediction Active</span>
           </div>
-          <div className="table-wrap">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '15px', flexWrap: 'wrap', gap: '15px' }}>
+            <div>
+              <span className="stat-label">Projected Sales (7 Days)</span>
+              <strong className="stat-value" style={{ margin: '5px 0' }}>{money(salesForecast.projected)}</strong>
+              <span className="stat-change">Model Confidence: {salesForecast.confidence}</span>
+            </div>
+            <button className="button button-primary" onClick={() => handleApply('Sales Demand')}>Apply Forecast Strategy</button>
+          </div>
+        </div>
+
+        {/* Model 2: Inventory Depletion Engine */}
+        <div className="card" style={{ padding: '20px' }}>
+          <div className="card-title" style={{ padding: '0 0 15px 0', borderBottom: '1px solid var(--line)' }}>
+            <h3 style={{ color: 'var(--red)' }}>Model 2: Inventory Depletion Engine</h3>
+            <span className="badge warning">Low Stock Alerts</span>
+          </div>
+          <div className="table-wrap" style={{ marginTop: '15px' }}>
             <table>
               <thead>
-                <tr>
-                  <th>Item</th>
-                  <th>Stock</th>
-                  <th>Days Left</th>
-                  <th>Risk</th>
-                </tr>
+                <tr><th>Ingredient</th><th>Stock</th><th>Days Left</th><th>Risk Level</th></tr>
               </thead>
               <tbody>
-                {stockModels.slice(0, 4).map(s => (
+                {stockModels.slice(0, 3).map(s => (
                   <tr key={s.id}>
                     <td><strong>{s.name}</strong></td>
                     <td>{s.onHand} {s.unit}</td>
-                    <td>{s.daysLeft} days</td>
+                    <td>{s.daysLeft} d</td>
                     <td><span className="badge" style={{ color: s.risk === 'High' ? 'var(--red)' : 'var(--green)' }}>{s.risk}</span></td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
+          <div style={{ marginTop: '15px', display: 'flex', justifyContent: 'flex-end' }}>
+            <button className="button button-primary" onClick={() => handleApply('Inventory Restock')}>Apply Restock Plan</button>
+          </div>
         </div>
 
-        {/* Model 3: Menu Intelligence Table */}
-        <div className="card">
-          <div className="card-title">
-            <h3>2. Menu Profitability Model</h3>
-            <span className="muted">Performance Matrix</span>
+        {/* Model 3: Menu Profitability Matrix */}
+        <div className="card" style={{ padding: '20px' }}>
+          <div className="card-title" style={{ padding: '0 0 15px 0', borderBottom: '1px solid var(--line)' }}>
+            <h3 style={{ color: 'var(--green)' }}>Model 3: Menu Profitability Matrix</h3>
+            <span className="badge success">ROI Tracking</span>
           </div>
-          <div className="table-wrap">
+          <div className="table-wrap" style={{ marginTop: '15px' }}>
             <table>
               <thead>
-                <tr>
-                  <th>Dish</th>
-                  <th>Category</th>
-                  <th>Status</th>
-                  <th>Trend</th>
-                </tr>
+                <tr><th>Menu Dish</th><th>Profit Status</th><th>Popularity</th><th>Action</th></tr>
               </thead>
               <tbody>
-                {menuMatrix.slice(0, 4).map(m => (
+                {menuMatrix.slice(0, 3).map(m => (
                   <tr key={m.id}>
                     <td><strong>{m.name}</strong></td>
-                    <td className="muted">{m.category}</td>
                     <td><span className="badge" style={{ backgroundColor: m.color+'15', color: m.color }}>{m.type}</span></td>
-                    <td className="stat-change">↑ High</td>
+                    <td className="stat-change">↑ Increasing</td>
+                    <td className="muted">Optimizing...</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
+          <div style={{ marginTop: '15px', display: 'flex', justifyContent: 'flex-end' }}>
+            <button className="button button-primary" onClick={() => handleApply('Menu Optimization')}>Apply Menu Adjustments</button>
+          </div>
         </div>
 
-      </div>
-
-      <div className="dashboard-grid" style={{ marginTop: '20px' }}>
-
-        {/* Model 4: Staffing Heatmap Simulator */}
-        <div className="card">
-          <div className="card-title">
-            <h3>3. Labor Optimization AI</h3>
-            <span className="muted">Next 24h peaks</span>
+        {/* Model 4: Labor Peak-Time Predictor */}
+        <div className="card" style={{ padding: '20px' }}>
+          <div className="card-title" style={{ padding: '0 0 15px 0', borderBottom: '1px solid var(--line)' }}>
+            <h3 style={{ color: 'var(--accent)' }}>Model 4: Labor Peak-Time Predictor</h3>
+            <span className="badge info">Smart Scheduling</span>
           </div>
-          <div className="table-wrap">
+          <div className="table-wrap" style={{ marginTop: '15px' }}>
             <table>
               <thead>
-                <tr>
-                  <th>Time Window</th>
-                  <th>Workload</th>
-                  <th>Staff Recommended</th>
-                </tr>
+                <tr><th>Time Slot</th><th>Expected Load</th><th>Staff Needed</th></tr>
               </thead>
               <tbody>
                 {peaks.map((p, i) => (
                   <tr key={i}>
                     <td>{p.time}</td>
                     <td><span className="badge info">{p.load}</span></td>
-                    <td className="text-right"><strong>{p.staffNeeded} members</strong></td>
+                    <td><strong>{p.staffNeeded} members</strong></td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-        </div>
-
-        {/* AI Strategic Action Model */}
-        <div className="card" style={{ padding: '20px', background: 'var(--navy)', color: '#fff' }}>
-          <h3 style={{ color: 'var(--accent)', marginBottom: '15px' }}>4. Business Intelligence Model</h3>
-          <div style={{ display: 'grid', gap: '15px', fontSize: '13px', opacity: '0.9' }}>
-            <p>• <strong>Strategy:</strong> Increase production of <strong>{menuMatrix[0].name}</strong> for the upcoming peak at 7:00 PM.</p>
-            <p>• <strong>Cost Saving:</strong> Reducing stock of low-turnover items could save <strong>2,400 Rs</strong> this week.</p>
-            <p>• <strong>Growth:</strong> Current trends suggest expanding your <strong>{menuMatrix[0].category}</strong> category by 2 items.</p>
+          <div style={{ marginTop: '15px', display: 'flex', justifyContent: 'flex-end' }}>
+            <button className="button button-primary" onClick={() => handleApply('Labor Scheduling')}>Apply Smart Roster</button>
           </div>
-          <button className="button button-primary" style={{ width: '100%', marginTop: '15px' }}>Apply AI Suggestions</button>
         </div>
 
       </div>
