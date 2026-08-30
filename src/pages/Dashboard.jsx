@@ -104,6 +104,7 @@ const Dashboard = ({ orders, menu, onNewOrder }) => {
               {menu.slice(0, 4).map(item => (
                 <tr key={item.id}>
                   <td>
+<td>
                       <div className="item-name-cell">
                         <div className="food-placeholder">{item.name.split(' ').map(x => x[0]).join('').slice(0, 2)}</div>
                         <div className="item-details">
@@ -155,6 +156,8 @@ const Dashboard = ({ orders, menu, onNewOrder }) => {
                     </div>
                   </td>
                   <td className="text-right font-medium tabular-nums">{money(orderTotal(o))}</td>
+                  <td className="text-center">{badge(o.status)}</td>
+                  <td                  <td className="text-right font-medium tabular-nums">{money(orderTotal(o))}</td>
                   <td className="text-center">{badge(o.status)}</td>
                   <td className="text-right muted font-mono" style={{ fontSize: '11px' }}>{o.time}</td>
                 </tr>
