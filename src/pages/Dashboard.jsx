@@ -103,7 +103,7 @@ const Dashboard = ({ orders, menu, onNewOrder }) => {
             <tbody>
               {menu.slice(0, 4).map(item => (
                 <tr key={item.id}>
-                    <td data-label="Item">
+                  <td>
                       <div className="item-name-cell">
                         <div className="food-placeholder">{item.name.split(' ').map(x => x[0]).join('').slice(0, 2)}</div>
                         <div className="item-details">
@@ -141,12 +141,12 @@ const Dashboard = ({ orders, menu, onNewOrder }) => {
             <tbody>
               {orders.slice(0, 5).map(o => (
                 <tr key={o.id}>
-                  <td data-label="Order ID" className="font-mono font-medium">{o.id}</td>
-                  <td data-label="Type">
+                  <td className="font-mono font-medium">{o.id}</td>
+                  <td>
                     <div className="font-medium">{o.type}</div>
                     <span className="muted" style={{ fontSize: '11px' }}>{o.label}</span>
                   </td>
-                  <td data-label="Items" className="text-center">
+                  <td className="text-center">
                     <div className="item-details" style={{ alignItems: 'center' }}>
                       {o.items.slice(0, 2).map((line, idx) => (
                         <span key={idx} style={{ fontSize: '10px' }}>{line.qty} × {itemById(line.menuId)?.name}</span>
@@ -154,9 +154,9 @@ const Dashboard = ({ orders, menu, onNewOrder }) => {
                       {o.items.length > 2 && <span className="muted" style={{ fontSize: '9px' }}>+{o.items.length - 2} more</span>}
                     </div>
                   </td>
-                  <td data-label="Total" className="text-right font-medium tabular-nums">{money(orderTotal(o))}</td>
-                  <td data-label="Status" className="text-center">{badge(o.status)}</td>
-                  <td data-label="Time" className="text-right muted font-mono" style={{ fontSize: '11px' }}>{o.time}</td>
+                  <td className="text-right font-medium tabular-nums">{money(orderTotal(o))}</td>
+                  <td className="text-center">{badge(o.status)}</td>
+                  <td className="text-right muted font-mono" style={{ fontSize: '11px' }}>{o.time}</td>
                 </tr>
               ))}
             </tbody>
