@@ -82,8 +82,8 @@ const Reports = ({ expenses }) => {
                   { name: 'Desserts', share: '31%', value: '$3,702' }
                 ].map((item, idx) => (
                   <tr key={idx}>
-                    <td className="font-medium">{item.name}</td>
-                    <td className="text-right">
+                    <td data-label="Category" className="font-medium">{item.name}</td>
+                    <td data-label="Share" className="text-right">
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '10px' }}>
                         <div className="progress-track" style={{ width: '60px', height: '6px', margin: 0 }}>
                           <div className="progress-fill" style={{ width: item.share }}></div>
@@ -91,7 +91,7 @@ const Reports = ({ expenses }) => {
                         <span className="muted" style={{ fontSize: '11px' }}>{item.share}</span>
                       </div>
                     </td>
-                    <td className="text-right font-medium tabular-nums">{item.value}</td>
+                    <td data-label="Value" className="text-right font-medium tabular-nums">{item.value}</td>
                   </tr>
                 ))}
               </tbody>
