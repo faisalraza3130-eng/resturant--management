@@ -6,10 +6,6 @@ const Menu = ({ menu, onToggleAvailability, onDeleteItem, onEditItem, onAddItem 
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [availabilityFilter, setAvailabilityFilter] = useState('all');
 
-  const icons = {
-    edit: '<svg width="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 16-.7 4.7L8 20l11-11-4-4L4 16Z"/><path d="m13.5 6.5 4 4"/></svg>'
-  };
-
   const filteredMenu = menu.filter(item => {
     const matchesSearch = `${item.name} ${item.description}`.toLowerCase().includes(search.toLowerCase());
     const matchesCategory = categoryFilter === 'all' || item.category === categoryFilter;
@@ -18,7 +14,7 @@ const Menu = ({ menu, onToggleAvailability, onDeleteItem, onEditItem, onAddItem 
   });
 
   return (
-    <section className="page active" id="menu-page">
+    <section className="page active">
       <div className="page-head">
         <div>
           <h2>Menu management</h2>
@@ -26,9 +22,7 @@ const Menu = ({ menu, onToggleAvailability, onDeleteItem, onEditItem, onAddItem 
         </div>
         <div className="head-actions">
           <button className="button button-primary" onClick={onAddItem}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M12 5v14M5 12h14"/>
-            </svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 5v14M5 12h14"/></svg>
             Add menu item
           </button>
         </div>
@@ -36,42 +30,21 @@ const Menu = ({ menu, onToggleAvailability, onDeleteItem, onEditItem, onAddItem 
 
       <div className="toolbar">
         <div className="search">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <circle cx="10.7" cy="10.7" r="6.7"/>
-            <path d="m16 16 5 5"/>
-          </svg>
-          <input
-            className="input"
-            placeholder="Search menu items..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="10.7" cy="10.7" r="6.7"/><path d="m16 16 5 5"/></svg>
+          <input className="input" placeholder="Search menu items..." value={search} onChange={(e) => setSearch(e.target.value)} />
         </div>
-        <select
-          className="input select-small"
-          value={categoryFilter}
-          onChange={(e) => setCategoryFilter(e.target.value)}
-        >
+        <select className="input select-small" value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
           <option value="all">All categories</option>
-          <option>Entrees</option>
-          <option>Burgers</option>
-          <option>Salads</option>
-          <option>Desserts</option>
-          <option>Beverages</option>
+          <option>Entrees</option><option>Burgers</option><option>Salads</option><option>Desserts</option><option>Beverages</option>
         </select>
-        <select
-          className="input select-small"
-          value={availabilityFilter}
-          onChange={(e) => setAvailabilityFilter(e.target.value)}
-        >
+        <select className="input select-small" value={availabilityFilter} onChange={(e) => setAvailabilityFilter(e.target.value)}>
           <option value="all">All availability</option>
-          <option value="available">Available</option>
-          <option value="unavailable">Unavailable</option>
+          <option value="available">Available</option><option value="unavailable">Unavailable</option>
         </select>
       </div>
 
       <div className="card table-wrap">
-        <table className="menu-table">
+        <table>
           <thead>
             <tr>
               <th>Item Details</th>
@@ -87,9 +60,7 @@ const Menu = ({ menu, onToggleAvailability, onDeleteItem, onEditItem, onAddItem 
                 <tr key={item.id}>
                   <td>
                     <div className="item-name-cell">
-                      <div className="food-placeholder">
-                        {item.name.split(' ').map(x => x[0]).join('').slice(0, 2)}
-                      </div>
+                      <div className="food-placeholder">{item.name.split(' ').map(x => x[0]).join('').slice(0, 2)}</div>
                       <div className="item-details">
                         <strong>{item.name}</strong>
                         <span>{item.description}</span>
@@ -100,32 +71,20 @@ const Menu = ({ menu, onToggleAvailability, onDeleteItem, onEditItem, onAddItem 
                   <td className="text-right font-medium tabular-nums">{money(item.price)}</td>
                   <td className="text-center">
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
-                      <button
-                        className={`toggle ${item.available ? 'on' : ''}`}
-                        aria-label="Toggle availability"
-                        onClick={() => onToggleAvailability(item.id)}
-                      ></button>
-                      <span className="muted" style={{ fontSize: '12px', minWidth: '70px' }}>
-                        {item.available ? 'Available' : 'Sold Out'}
-                      </span>
+                      <button className={`toggle ${item.available ? 'on' : ''}`} onClick={() => onToggleAvailability(item.id)}></button>
+                      <span className="muted" style={{ fontSize: '11px', minWidth: '60px' }}>{item.available ? 'Available' : 'Sold Out'}</span>
                     </div>
                   </td>
                   <td className="text-right">
-                    <div className="item-actions" style={{ justifyContent: 'flex-end' }}>
-                      <button className="mini-button" onClick={() => onEditItem(item)}>
-                        Edit
-                      </button>
-                      <button className="mini-button" style={{ color: 'var(--error)' }} onClick={() => onDeleteItem(item.id)}>Delete</button>
+                    <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
+                      <button className="mini-button" onClick={() => onEditItem(item)}>Edit</button>
+                      <button className="mini-button" style={{ color: 'var(--red)' }} onClick={() => onDeleteItem(item.id)}>Delete</button>
                     </div>
                   </td>
                 </tr>
               ))
             ) : (
-              <tr>
-                <td colSpan="5">
-                  <div className="empty">No menu items match your filters.</div>
-                </td>
-              </tr>
+              <tr><td colSpan="5"><div className="empty">No menu items match your filters.</div></td></tr>
             )}
           </tbody>
         </table>

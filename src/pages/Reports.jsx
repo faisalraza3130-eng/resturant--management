@@ -65,25 +65,37 @@ const Reports = ({ expenses }) => {
             <h3>Sales by category</h3>
             <span className="muted">This month</span>
           </div>
-          <div className="report-bar">
-            <label>Entrees</label>
-            <div className="progress-track"><div className="progress-fill" style={{ width: '84%' }}></div></div>
-            <strong>$12,492</strong>
-          </div>
-          <div className="report-bar">
-            <label>Burgers</label>
-            <div className="progress-track"><div className="progress-fill" style={{ width: '67%' }}></div></div>
-            <strong>$8,218</strong>
-          </div>
-          <div className="report-bar">
-            <label>Beverages</label>
-            <div className="progress-track"><div className="progress-fill" style={{ width: '43%' }}></div></div>
-            <strong>$5,104</strong>
-          </div>
-          <div className="report-bar">
-            <label>Desserts</label>
-            <div className="progress-track"><div className="progress-fill" style={{ width: '31%' }}></div></div>
-            <strong>$3,702</strong>
+          <div className="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th className="text-right">Performance</th>
+                  <th className="text-right">Revenue</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  { name: 'Entrees', share: '84%', value: '$12,492' },
+                  { name: 'Burgers', share: '67%', value: '$8,218' },
+                  { name: 'Beverages', share: '43%', value: '$5,104' },
+                  { name: 'Desserts', share: '31%', value: '$3,702' }
+                ].map((item, idx) => (
+                  <tr key={idx}>
+                    <td className="font-medium">{item.name}</td>
+                    <td className="text-right">
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '10px' }}>
+                        <div className="progress-track" style={{ width: '60px', height: '6px', margin: 0 }}>
+                          <div className="progress-fill" style={{ width: item.share }}></div>
+                        </div>
+                        <span className="muted" style={{ fontSize: '11px' }}>{item.share}</span>
+                      </div>
+                    </td>
+                    <td className="text-right font-medium tabular-nums">{item.value}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>

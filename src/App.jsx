@@ -19,7 +19,7 @@ import StockModal from './components/StockModal';
 
 import {
   initialMenu, initialOrders, initialInventory,
-  initialCustomers, initialExpenses, initialStaff, initialOnlineOrders
+  initialCustomers, initialExpenses, initialStaff
 } from './data';
 
 const pageInfo = {
@@ -36,6 +36,7 @@ const pageInfo = {
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState('dashboard');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [menu, setMenu] = useState(initialMenu);
   const [orders, setOrders] = useState(initialOrders);
   const [inventory, setInventory] = useState(initialInventory);
@@ -74,26 +75,21 @@ export default function App() {
   const handleToggleAvailability = (id) => {
     setMenu(menu.map(i => i.id === id ? { ...i, available: !i.available } : i));
     const item = menu.find(i => i.id === id);
-    showToast(`${item.name} is now ${!item.available ? 'available' : 'unavailable'}.`);
+    showToast(`${item.name} availability updated.`);
   };
 
   const handleDeleteMenuItem = (id) => {
-    const item = menu.find(i => i.id === id);
-    if (window.confirm(`Delete ${item.name} from the menu?`)) {
+    if (window.confirm(`Delete item?`)) {
       setMenu(menu.filter(i => i.id !== id));
-      showToast('Menu item deleted.');
+      showToast('Item deleted.');
     }
   };
 
   const handleSaveMenuItem = (data) => {
-    if (editingMenuItem) {
-      setMenu(menu.map(i => i.id === editingMenuItem.id ? { ...i, ...data } : i));
-      showToast(`${data.name} has been updated.`);
-    } else {
-      setMenu([{ id: Date.now(), ...data }, ...menu]);
-      showToast(`${data.name} added to menu.`);
-    }
+    if (editingMenuItem) setMenu(menu.map(i => i.id === editingMenuItem.id ? { ...i, ...data } : i));
+    else setMenu([{ id: Date.now(), ...data }, ...menu]);
     toggleModal('menu', false);
+    showToast('Menu item saved.');
   };
 
   const handleSaveOrder = (data) => {
@@ -139,7 +135,7 @@ export default function App() {
 
   const handleStatusChange = (id, status) => {
     setOrders(orders.map(o => o.id === id ? { ...o, status } : o));
-    showToast(`${id} marked ${status.toLowerCase()}.`);
+    showToast(`${id} updated.`);
   };
 
   const handleMarkPaid = (id) => {
@@ -150,31 +146,24 @@ export default function App() {
   const handleSaveStaff = (data) => {
     setStaff([...staff, { id: Date.now(), ...data, hours: 0 }]);
     toggleModal('staff', false);
-    showToast(`${data.name} added to staff.`);
+    showToast('Staff added.');
   };
 
   const handleToggleStaff = (id) => {
     setStaff(staff.map(s => s.id === id ? { ...s, status: s.status === 'Clocked in' ? 'Scheduled' : 'Clocked in' } : s));
-    const s = staff.find(x => x.id === id);
-    showToast(`${s.name} is now ${s.status === 'Clocked in' ? 'clocked out' : 'clocked in'}.`);
-  };
-
-  const handleSaveCustomer = (data) => {
-    setCustomers([{ id: Date.now(), ...data, visits: 1, last: 'Aug 29, 2026', spent: 0, segment: 'New' }, ...customers]);
-    toggleModal('customer', false);
-    showToast(`${data.name} added to customers.`);
+    showToast('Status updated.');
   };
 
   const handleSaveExpense = (data) => {
     setExpenses([{ id: Date.now(), date: 'Aug 29, 2026', ...data }, ...expenses]);
     toggleModal('expense', false);
-    showToast(`Expense recorded.`);
+    showToast('Expense recorded.');
   };
 
   const handleSaveStock = (data) => {
     setInventory(inventory.map(i => i.id === data.itemId ? { ...i, onHand: i.onHand + data.amount } : i));
     toggleModal('stock', false);
-    showToast(`Inventory updated.`);
+    showToast('Inventory updated.');
   };
 
   const renderContent = () => {
@@ -192,11 +181,17 @@ export default function App() {
     }
   };
 
+  const navigate = (page) => {
+    setCurrentPage(page);
+    setIsSidebarOpen(false);
+  };
+
   return (
     <div className="app">
-      <Sidebar currentPage={currentPage} onPageChange={setCurrentPage} />
+      <div className={`sidebar-overlay ${isSidebarOpen ? 'active' : ''}`} onClick={() => setIsSidebarOpen(false)}></div>
+      <Sidebar currentPage={currentPage} onPageChange={navigate} isOpen={isSidebarOpen} />
       <main className="main">
-        <Topbar title={title} subtitle={subtitle} />
+        <Topbar title={title} subtitle={subtitle} onMenuClick={() => setIsSidebarOpen(true)} />
         <div className="content">
           {renderContent()}
         </div>

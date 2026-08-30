@@ -21,17 +21,17 @@ const Staff = ({ staff, onToggleStaff, onAddStaff }) => {
         </div>
       </div>
       <div className="section-grid">
-        <div className="card mini-stat">
+        <div className="card mini-stat" style={{ borderTop: '4px solid var(--blue)' }}>
           <span className="stat-label">Team members</span>
           <strong className="stat-value">{staff.length}</strong>
           <small>Across all roles</small>
         </div>
-        <div className="card mini-stat">
+        <div className="card mini-stat" style={{ borderTop: '4px solid var(--green)' }}>
           <span className="stat-label">Clocked in</span>
           <strong className="stat-value">{activeCount}</strong>
           <small>Currently on shift</small>
         </div>
-        <div className="card mini-stat">
+        <div className="card mini-stat" style={{ borderTop: '4px solid var(--accent)' }}>
           <span className="stat-label">Scheduled today</span>
           <strong className="stat-value">9</strong>
           <small>Planned coverage</small>
@@ -41,33 +41,33 @@ const Staff = ({ staff, onToggleStaff, onAddStaff }) => {
         <table>
           <thead>
             <tr>
-              <th>Team Member</th>
+              <th>Team member</th>
               <th>Role</th>
-              <th>Shift Schedule</th>
-              <th className="text-center">Weekly Hours</th>
-              <th className="text-center">Status</th>
-              <th className="text-right">Quick Action</th>
+              <th>Shift</th>
+              <th>Hours this week</th>
+              <th>Status</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
             {staff.map(s => (
               <tr key={s.id}>
                 <td>
-                  <div className="item-name-cell">
+                  <div className="item-name">
                     <div className="person-initials">{initials(s.name)}</div>
-                    <strong style={{ color: '#fff' }}>{s.name}</strong>
+                    <strong>{s.name}</strong>
                   </div>
                 </td>
-                <td><span className="badge info">{s.role}</span></td>
+                <td>{s.role}</td>
                 <td className="muted">{s.shift}</td>
-                <td className="text-center tabular-nums font-medium">{s.hours}h</td>
-                <td className="text-center">
-                  <div className="status-line" style={{ justifyContent: 'center' }}>
+                <td>{s.hours} hrs</td>
+                <td>
+                  <div className="status-line">
                     <span className={`status-dot ${s.status === 'Scheduled' ? 'off' : ''}`}></span>
-                    <span style={{ fontSize: '12px', fontWeight: 600 }}>{s.status}</span>
+                    {s.status}
                   </div>
                 </td>
-                <td className="text-right">
+                <td>
                   <button className="mini-button" onClick={() => onToggleStaff(s.id)}>
                     {s.status === 'Clocked in' ? 'Clock out' : 'Clock in'}
                   </button>

@@ -9,16 +9,16 @@ const Settings = ({ activeRole, onChangeRole }) => {
           <p>Control team access, data portability, and restaurant operations.</p>
         </div>
         <div className="head-actions">
-          <span className="code-chip">Phase 3</span>
+          <span className="badge info">Phase 3</span>
         </div>
       </div>
-      <div className="section-grid two">
+      <div className="settings-grid">
         <div>
-          <div className="card feature-card">
-            <h3>Access &amp; roles</h3>
-            <p>Choose the active workspace role for this demo and review what each role can access.</p>
-            <div className="field" style={{ marginBottom: '13px' }}>
-              <label>Current workspace role</label>
+          <div className="card" style={{ padding: '20px', marginBottom: '20px' }}>
+            <h3 style={{ margin: '0 0 10px', fontSize: '15px' }}>Access &amp; roles</h3>
+            <p className="muted" style={{ fontSize: '12px', marginBottom: '15px' }}>Choose the active workspace role and review permissions.</p>
+            <div className="field" style={{ marginBottom: '20px' }}>
+              <label className="muted" style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', display: 'block', marginBottom: '5px' }}>Current workspace role</label>
               <select
                 className="input"
                 value={activeRole}
@@ -29,58 +29,53 @@ const Settings = ({ activeRole, onChangeRole }) => {
                 <option>Server</option>
               </select>
             </div>
-            <div className="feature-row">
-              <div><strong>Manager</strong><span>Full operations and reporting access</span></div>
-              <span className="permission">Full access</span>
-            </div>
-            <div className="feature-row">
-              <div><strong>Cashier</strong><span>Orders, billing, and menu availability</span></div>
-              <span className="permission">Operational</span>
-            </div>
-            <div className="feature-row">
-              <div><strong>Server</strong><span>Orders and table service workflow</span></div>
-              <span className="permission restricted">Limited</span>
+            <div style={{ display: 'grid', gap: '12px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderTop: '1px solid var(--line)' }}>
+                <div><strong>Manager</strong><div className="muted" style={{ fontSize: '11px' }}>Full operations and reporting access</div></div>
+                <span style={{ color: 'var(--green)', fontWeight: 700, fontSize: '11px' }}>Full access</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderTop: '1px solid var(--line)' }}>
+                <div><strong>Cashier</strong><div className="muted" style={{ fontSize: '11px' }}>Orders, billing, and menu availability</div></div>
+                <span style={{ color: 'var(--green)', fontWeight: 700, fontSize: '11px' }}>Operational</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderTop: '1px solid var(--line)' }}>
+                <div><strong>Server</strong><div className="muted" style={{ fontSize: '11px' }}>Orders and table service workflow</div></div>
+                <span style={{ color: 'var(--muted)', fontWeight: 600, fontSize: '11px' }}>Limited</span>
+              </div>
             </div>
           </div>
-          <div className="card feature-card">
-            <h3>Receipt printer</h3>
-            <p>Use your browser's print dialog to send receipts to a connected thermal or standard printer.</p>
-            <div className="feature-row">
-              <div><strong>Printer connection</strong><span>Browser print ready</span></div>
-              <button className="button button-secondary">Test print</button>
+          <div className="card" style={{ padding: '20px' }}>
+            <h3 style={{ margin: '0 0 10px', fontSize: '15px' }}>Receipt printer</h3>
+            <p className="muted" style={{ fontSize: '12px', marginBottom: '15px' }}>Use your browser's print dialog to send receipts to a printer.</p>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderTop: '1px solid var(--line)' }}>
+              <div><strong>Printer connection</strong><div className="muted" style={{ fontSize: '11px' }}>Browser print ready</div></div>
+              <button className="button button-secondary" style={{ padding: '6px 12px', fontSize: '12px' }}>Test print</button>
             </div>
           </div>
         </div>
         <div>
-          <div className="card feature-card">
-            <h3>Data &amp; backups</h3>
-            <p>Your current demo data is saved in this browser. Download a backup before moving devices or resetting the workspace.</p>
-            <div className="feature-row">
-              <div><strong>Local database</strong><span>Browser storage is active</span></div>
-              <span className="badge completed">Connected</span>
+          <div className="card" style={{ padding: '20px', marginBottom: '20px' }}>
+            <h3 style={{ margin: '0 0 10px', fontSize: '15px' }}>Data &amp; backups</h3>
+            <p className="muted" style={{ fontSize: '12px', marginBottom: '15px' }}>Your current demo data is saved in this browser.</p>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderTop: '1px solid var(--line)' }}>
+              <div><strong>Local database</strong><div className="muted" style={{ fontSize: '11px' }}>Browser storage is active</div></div>
+              <span className="badge ready">Connected</span>
             </div>
-            <div className="feature-row">
-              <div><strong>Backup workspace</strong><span>Download menu, orders, customers, and operations data</span></div>
-              <button className="button button-secondary">Download backup</button>
-            </div>
-            <div className="feature-row">
-              <div><strong>Restore workspace</strong><span>Load a previously exported JSON backup</span></div>
-              <label className="button button-secondary" style={{ cursor: 'pointer' }}>
-                Choose file
-                <input type="file" accept=".json,application/json" hidden />
-              </label>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderTop: '1px solid var(--line)' }}>
+              <div><strong>Backup workspace</strong><div className="muted" style={{ fontSize: '11px' }}>Download operations data</div></div>
+              <button className="button button-secondary" style={{ padding: '6px 12px', fontSize: '12px' }}>Download</button>
             </div>
           </div>
-          <div className="card feature-card">
-            <h3>Exports</h3>
-            <p>Share operational data with accounting or management tools.</p>
-            <div className="feature-row">
-              <div><strong>Sales CSV</strong><span>Orders and totals for spreadsheet analysis</span></div>
-              <button className="button button-secondary">Download CSV</button>
+          <div className="card" style={{ padding: '20px' }}>
+            <h3 style={{ margin: '0 0 10px', fontSize: '15px' }}>Exports</h3>
+            <p className="muted" style={{ fontSize: '12px', marginBottom: '15px' }}>Share operational data with management tools.</p>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderTop: '1px solid var(--line)' }}>
+              <div><strong>Sales CSV</strong><div className="muted" style={{ fontSize: '11px' }}>Orders and totals for analysis</div></div>
+              <button className="button button-secondary" style={{ padding: '6px 12px', fontSize: '12px' }}>Download CSV</button>
             </div>
-            <div className="feature-row">
-              <div><strong>Report printout</strong><span>Print the current performance summary to PDF</span></div>
-              <button className="button button-secondary" onClick={() => window.print()}>Print report</button>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderTop: '1px solid var(--line)' }}>
+              <div><strong>Report printout</strong><div className="muted" style={{ fontSize: '11px' }}>Print performance summary</div></div>
+              <button className="button button-secondary" style={{ padding: '6px 12px', fontSize: '12px' }} onClick={() => window.print()}>Print report</button>
             </div>
           </div>
         </div>

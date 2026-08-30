@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Sidebar = ({ currentPage, onPageChange }) => {
+const Sidebar = ({ currentPage, onPageChange, isOpen }) => {
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg>
@@ -32,7 +32,7 @@ const Sidebar = ({ currentPage, onPageChange }) => {
   ];
 
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
       <div className="brand">
         <div className="brand-mark">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">

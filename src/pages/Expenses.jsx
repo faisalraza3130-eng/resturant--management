@@ -28,25 +28,26 @@ const Expenses = ({ expenses, onAddExpense }) => {
         </div>
       </div>
       <div className="section-grid">
-        <div className="card mini-stat">
+        <div className="card mini-stat" style={{ borderTop: '4px solid var(--blue)' }}>
           <span className="stat-label">This month's expenses</span>
-          <strong className="stat-value">{money(totalThisMonth)}</strong>
+          <strong className="stat-value" id="expense-total">{money(totalThisMonth)}</strong>
           <small>Across all categories</small>
         </div>
-        <div className="card mini-stat">
+        <div className="card mini-stat" style={{ borderTop: '4px solid var(--accent)' }}>
           <span className="stat-label">Largest category</span>
-          <strong className="stat-value" style={{ fontSize: '18px' }}>{largestCategory}</strong>
+          <strong className="stat-value" style={{ fontSize: '18px' }} id="expense-largest">{largestCategory}</strong>
           <small>By total spend</small>
         </div>
-        <div className="card mini-stat">
+        <div className="card mini-stat" style={{ borderTop: '4px solid var(--green)' }}>
           <span className="stat-label">Expense entries</span>
-          <strong className="stat-value">{expenses.length}</strong>
+          <strong className="stat-value" id="expense-count">{expenses.length}</strong>
           <small>Recorded this month</small>
         </div>
       </div>
       <div className="toolbar">
         <select
           className="input select-small"
+          id="expense-filter"
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
         >
@@ -66,20 +67,20 @@ const Expenses = ({ expenses, onAddExpense }) => {
               <th>Description</th>
               <th>Category</th>
               <th>Vendor</th>
-              <th className="text-right">Amount</th>
-              <th className="text-center">Status</th>
+              <th>Amount</th>
+              <th>Status</th>
             </tr>
           </thead>
           <tbody>
             {filteredExpenses.length > 0 ? (
               filteredExpenses.map(e => (
                 <tr key={e.id}>
-                  <td className="muted font-mono" style={{ fontSize: '12px' }}>{e.date}</td>
-                  <td><strong style={{ color: '#fff' }}>{e.description}</strong></td>
-                  <td><span className="badge info">{e.category}</span></td>
+                  <td>{e.date}</td>
+                  <td><b>{e.description}</b></td>
+                  <td>{e.category}</td>
                   <td className="muted">{e.vendor}</td>
-                  <td className="text-right font-medium tabular-nums">{money(e.amount)}</td>
-                  <td className="text-center">
+                  <td><b>{money(e.amount)}</b></td>
+                  <td>
                     {e.status === 'Paid' ? (
                       <span className="badge paid">Paid</span>
                     ) : (

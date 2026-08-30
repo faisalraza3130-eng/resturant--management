@@ -22,19 +22,19 @@ const Inventory = ({ inventory, onOpenStockModal }) => {
         </div>
       </div>
       <div className="section-grid">
-        <div className="card mini-stat">
+        <div className="card mini-stat" style={{ borderTop: '4px solid var(--blue)' }}>
           <span className="stat-label">Tracked items</span>
-          <strong className="stat-value">{inventory.length}</strong>
+          <strong className="stat-value" id="inventory-count">{inventory.length}</strong>
           <small>Across active ingredients</small>
         </div>
-        <div className="card mini-stat">
+        <div className="card mini-stat" style={{ borderTop: '4px solid var(--red)' }}>
           <span className="stat-label">Low stock</span>
-          <strong className="stat-value">{lowStock.length}</strong>
+          <strong className="stat-value" id="inventory-low">{lowStock.length}</strong>
           <small>Needs attention today</small>
         </div>
-        <div className="card mini-stat">
+        <div className="card mini-stat" style={{ borderTop: '4px solid var(--accent)' }}>
           <span className="stat-label">Inventory value</span>
-          <strong className="stat-value">{money(inventoryValue)}</strong>
+          <strong className="stat-value" id="inventory-value">{money(inventoryValue)}</strong>
           <small>Estimated current value</small>
         </div>
       </div>
@@ -42,12 +42,12 @@ const Inventory = ({ inventory, onOpenStockModal }) => {
         <table>
           <thead>
             <tr>
-              <th>Ingredient</th>
+              <th>Item</th>
               <th>Category</th>
-              <th className="text-right">On Hand</th>
-              <th className="text-right">Reorder Level</th>
-              <th className="text-center">Status</th>
-              <th className="text-right">Action</th>
+              <th>On hand</th>
+              <th>Reorder at</th>
+              <th>Status</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -55,25 +55,20 @@ const Inventory = ({ inventory, onOpenStockModal }) => {
               const isLow = i.onHand <= i.reorder;
               return (
                 <tr key={i.id}>
-                  <td><strong style={{ color: '#fff' }}>{i.name}</strong></td>
-                  <td><span className="badge info">{i.category}</span></td>
-                  <td className="text-right tabular-nums">
-                    <span className={isLow ? 'font-medium' : ''} style={isLow ? { color: 'var(--error)' } : {}}>
-                      {i.onHand}
-                    </span>
-                    <span className="muted" style={{ marginLeft: '6px', fontSize: '11px' }}>{i.unit}</span>
-                  </td>
-                  <td className="text-right tabular-nums muted">{i.reorder} {i.unit}</td>
-                  <td className="text-center">
+                  <td><b>{i.name}</b></td>
+                  <td>{i.category}</td>
+                  <td><b>{i.onHand}</b> <span className="muted">{i.unit}</span></td>
+                  <td>{i.reorder} {i.unit}</td>
+                  <td>
                     {isLow ? (
                       <span className="badge cancelled">Low stock</span>
                     ) : (
                       <span className="badge completed">Healthy</span>
                     )}
                   </td>
-                  <td className="text-right">
+                  <td>
                     <button className="mini-button" onClick={() => onOpenStockModal(i.id)}>
-                      Update Stock
+                      Add stock
                     </button>
                   </td>
                 </tr>

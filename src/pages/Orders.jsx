@@ -17,17 +17,15 @@ const Orders = ({ orders, menu, onStatusChange, onNewOrder }) => {
   });
 
   return (
-    <section className="page active" id="orders-page">
+    <section className="page active">
       <div className="page-head">
         <div>
-          <h2>Orders</h2>
+          <h2>Orders tracking</h2>
           <p>Track every order from the first ticket to completion.</p>
         </div>
         <div className="head-actions">
           <button className="button button-primary" onClick={onNewOrder}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M12 5v14M5 12h14"/>
-            </svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 5v14M5 12h14"/></svg>
             New order
           </button>
         </div>
@@ -35,88 +33,72 @@ const Orders = ({ orders, menu, onStatusChange, onNewOrder }) => {
 
       <div className="toolbar">
         <div className="search">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <circle cx="10.7" cy="10.7" r="6.7"/>
-            <path d="m16 16 5 5"/>
-          </svg>
-          <input
-            className="input"
-            placeholder="Search order number or table..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="10.7" cy="10.7" r="6.7"/><path d="m16 16 5 5"/></svg>
+          <input className="input" placeholder="Search order number or table..." value={search} onChange={(e) => setSearch(e.target.value)} />
         </div>
-        <select
-          className="input select-small"
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-        >
+        <select className="input select-small" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
           <option value="all">All statuses</option>
-          <option>New</option>
-          <option>Preparing</option>
-          <option>Ready</option>
-          <option>Completed</option>
-          <option>Cancelled</option>
+          <option>New</option><option>Preparing</option><option>Ready</option><option>Completed</option><option>Cancelled</option>
         </select>
-        <select
-          className="input select-small"
-          value={typeFilter}
-          onChange={(e) => setTypeFilter(e.target.value)}
-        >
+        <select className="input select-small" value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}>
           <option value="all">All types</option>
-          <option>Dine-in</option>
-          <option>Takeout</option>
-          <option>Delivery</option>
+          <option>Dine-in</option><option>Takeout</option><option>Delivery</option>
         </select>
       </div>
 
-      <div className="orders-grid">
-        {filteredOrders.length > 0 ? (
-          filteredOrders.map(o => (
-            <div className="card order-card" key={o.id}>
-              <div className="order-card-head">
-                <div>
-                  <h3>{o.id}</h3>
-                  <span className="order-time">{o.time} · {o.type}</span>
-                </div>
-                {badge(o.status)}
-              </div>
-              <div className="order-meta">
-                <div>
-                  <span>{o.type === 'Delivery' ? 'Customer' : 'Location'}</span>
-                  <strong>{o.label}</strong>
-                  {o.type === 'Delivery' && o.deliveryDetails && (
-                    <div className="muted" style={{ fontSize: '10px', marginTop: '2px' }}>
-                      {o.deliveryDetails.phone}<br/>
-                      {o.deliveryDetails.address}
+      <div className="card table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Time</th>
+              <th>Service Type</th>
+              <th>Customer / Location</th>
+              <th>Items Ordered</th>
+              <th className="text-right">Total Amount</th>
+              <th className="text-center">Order Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredOrders.length > 0 ? (
+              filteredOrders.map(o => (
+                <tr key={o.id}>
+                  <td className="font-mono font-medium">{o.id}</td>
+                  <td className="muted font-mono" style={{ fontSize: '11px' }}>{o.time}</td>
+                  <td><span className="badge info">{o.type}</span></td>
+                  <td>
+                    <div className="font-medium">{o.label}</div>
+                    {o.type === 'Delivery' && o.deliveryDetails && (
+                      <div className="muted" style={{ fontSize: '11px' }}>{o.deliveryDetails.phone}</div>
+                    )}
+                  </td>
+                  <td>
+                    <div className="item-details">
+                      {o.items.map((line, idx) => (
+                        <span key={idx} style={{ fontSize: '11px' }}>{line.qty} × {itemById(line.menuId)?.name}</span>
+                      ))}
                     </div>
-                  )}
-                </div>
-                <div>
-                  <span>Items</span>
-                  <strong>{o.items.reduce((s, x) => s + x.qty, 0)} items</strong>
-                </div>
-              </div>
-              <div className="order-card-bottom">
-                <span className="order-total">{money(orderTotal(o))}</span>
-                <select
-                  className="input"
-                  style={{ width: 'auto', padding: '7px 8px', fontSize: '11px' }}
-                  value={o.status}
-                  onChange={(e) => onStatusChange(o.id, e.target.value)}
-                >
-                  {['New', 'Preparing', 'Ready', 'Completed', 'Cancelled'].map(x => (
-                    <option key={x} value={x}>{x}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
-          ))
-        ) : (
-          <div className="card empty" style={{ gridColumn: '1/-1' }}>
-            No orders match your filters.
-          </div>
-        )}
+                  </td>
+                  <td className="text-right font-medium tabular-nums">{money(orderTotal(o))}</td>
+                  <td className="text-center">
+                    <select
+                      className="input"
+                      style={{ width: 'auto', padding: '6px 10px', fontSize: '12px', height: '36px', minHeight: '36px' }}
+                      value={o.status}
+                      onChange={(e) => onStatusChange(o.id, e.target.value)}
+                    >
+                      {['New', 'Preparing', 'Ready', 'Completed', 'Cancelled'].map(x => (
+                        <option key={x} value={x}>{x}</option>
+                      ))}
+                    </select>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr><td colSpan="7"><div className="empty">No orders match your filters.</div></td></tr>
+            )}
+          </tbody>
+        </table>
       </div>
     </section>
   );
