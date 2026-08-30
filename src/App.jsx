@@ -8,7 +8,6 @@ import Billing from './pages/Billing';
 import Inventory from './pages/Inventory';
 import Staff from './pages/Staff';
 import Expenses from './pages/Expenses';
-import Reports from './pages/Reports';
 import Settings from './pages/Settings';
 
 import MenuModal from './components/MenuModal';
@@ -30,7 +29,6 @@ const pageInfo = {
   inventory: { title: 'Inventory', subtitle: 'Saturday, August 29, 2026 · Stock control' },
   expenses: { title: 'Expenses', subtitle: 'Saturday, August 29, 2026 · Operating costs' },
   staff: { title: 'Staff', subtitle: 'Saturday, August 29, 2026 · Team management' },
-  reports: { title: 'Reports', subtitle: 'Saturday, August 29, 2026 · Business performance' },
   settings: { title: 'Settings & access', subtitle: 'Saturday, August 29, 2026 · Workspace controls' },
 };
 
@@ -175,7 +173,6 @@ export default function App() {
       case 'inventory': return <Inventory inventory={inventory} onOpenStockModal={(id) => toggleModal('stock', true, id)} />;
       case 'staff': return <Staff staff={staff} onToggleStaff={handleToggleStaff} onAddStaff={() => toggleModal('staff', true)} />;
       case 'expenses': return <Expenses expenses={expenses} onAddExpense={() => toggleModal('expense', true)} />;
-      case 'reports': return <Reports expenses={expenses} />;
       case 'settings': return <Settings activeRole={activeRole} onChangeRole={setActiveRole} />;
       default: return null;
     }

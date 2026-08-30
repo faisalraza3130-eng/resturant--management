@@ -95,7 +95,7 @@ const Billing = ({ orders, menu, onMarkPaid }) => {
           <div className="summary-line"><span>Subtotal</span><b className="tabular-nums">{money(subtotal)}</b></div>
           <div className="billing-controls">
             <div className="field">
-              <label>Discount ($)</label>
+              <label>Discount</label>
               <input className="input" type="number" min="0" step=".01" value={discount} onChange={(e) => setDiscount(Number(e.target.value))} />
             </div>
             <div className="field">
