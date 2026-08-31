@@ -213,6 +213,36 @@ button { cursor: pointer; touch-action: manipulation; }
 .bar { display: block; width: min(32px, 70%); background: var(--accent); border-radius: 6px 6px 0 0; opacity: .9; min-height: 10px; }
 .bar.alt { background: #9aafc7; opacity: .65; }
 .bar-day { color: var(--muted); font-size: 11px; transform: translateY(23px); }
+
+/* --- STRICT MOBILE FIXES --- */
+@media (max-width: 768px) {
+  html, body, #root, .app, .main {
+    overflow-x: hidden !important;
+    max-width: 100vw !important;
+  }
+  .content {
+    padding: 12px 10px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .card, .stats, .section-grid, .dashboard-grid, .billing-layout, .settings-grid {
+    width: 100% !important;
+    max-width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    box-sizing: border-box !important;
+  }
+  .table-wrap, .chart-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    display: block !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  table { min-width: 500px !important; }
+  .chart { min-width: 320px !important; }
+}
+
 /* Table Responsiveness - Maintain Table Look but allow scrolling */
 .table-wrap {
   width: 100%;
