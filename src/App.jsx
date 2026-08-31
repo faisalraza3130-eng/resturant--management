@@ -1,4 +1,4 @@
-// Harbor & Hearth - Operational Dashboard (v1.0.1)
+// Harbor & Hearth - Operational Dashboard (v1.0.10)
 import React, { useState } from 'react';
 import Sidebar from './components/Sidebar';
 import Topbar from './components/Topbar';
