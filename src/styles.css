@@ -94,9 +94,24 @@ button { cursor: pointer; touch-action: manipulation; }
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
-.topbar { height: 76px; background: var(--surface); border-bottom: 1px solid var(--line); padding: 0 34px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 10; width: 100%; box-sizing: border-box; }
+.topbar {
+  min-height: 76px;
+  padding-top: env(safe-area-inset-top, 0px);
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  padding-left: 34px;
+  padding-right: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  width: 100%;
+  box-sizing: border-box;
+}
 @media (max-width: 640px) {
-  .topbar { height: 64px; }
+  .topbar { min-height: 80px; }
 }
 
 .mobile-nav-toggle {
@@ -114,7 +129,13 @@ button { cursor: pointer; touch-action: manipulation; }
 
 @media (max-width: 1024px) {
   .mobile-nav-toggle { display: flex; }
-  .topbar { padding: 0 16px; }
+  .topbar {
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: calc(12px + env(safe-area-inset-top, 0px));
+    padding-bottom: 12px;
+    min-height: calc(85px + env(safe-area-inset-top, 0px));
+  }
 }
 
 .topbar h1 { font-size: 20px; margin: 0; letter-spacing: -.025em; }
