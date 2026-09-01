@@ -157,8 +157,8 @@ button { cursor: pointer; touch-action: manipulation; }
 
 @media (max-width: 768px) {
   .page-head { flex-direction: column; align-items: flex-start; gap: 15px; }
-  .head-actions { width: 100%; display: flex; gap: 10px; justify-content: flex-start; flex-wrap: wrap; }
-  .head-actions .button { width: auto; flex: 0 1 auto; }
+  .head-actions { width: auto; display: flex; gap: 10px; justify-content: flex-start; flex-wrap: wrap; }
+  .head-actions .button { width: auto; flex: 0 0 auto; padding: 10px 15px; }
 }
 
 .page-head h2 { margin: 0; font-size: 21px; letter-spacing: -.03em; }
@@ -272,6 +272,7 @@ tbody tr:hover { background: rgba(212, 175, 55, 0.03); }
     position: sticky;
     top: 0;
     height: 100vh;
+    align-self: flex-start;
   }
 }
 
