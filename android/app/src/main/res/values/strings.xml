@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Harbor &amp; Hearth</string>
-    <string name="title_activity_main">Harbor &amp; Hearth</string>
+    <string name="app_name">MuRsHiD KhAnA</string>
+    <string name="title_activity_main">MuRsHiD KhAnA</string>
     <string name="package_name">com.harborhearth.app</string>
     <string name="custom_url_scheme">com.harborhearth.app</string>
 </resources>

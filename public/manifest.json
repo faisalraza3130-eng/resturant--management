@@ -1,0 +1,17 @@
+{
+  "name": "MuRsHiD KhAnA",
+  "short_name": "MuRsHiD",
+  "description": "Premium Tea Stall & Operations Management",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#001a16",
+  "theme_color": "#D4AF37",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ]
+}
