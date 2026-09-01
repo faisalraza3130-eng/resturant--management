@@ -57,7 +57,7 @@ export const initialCustomers = [
 
 export const initialExpenses = [
   {id:1,date:'Aug 28, 2026',description:'Milk supply delivery',category:'Food supplies',vendor:'Local Dairy',amount:9000,status:'Paid'},
-  {id:2,date:'Aug 27, 2026',description:'Tea stall team payroll',category:'Labor',vendor:'Harbor & Hearth',amount:15000,status:'Paid'}
+  {id:2,date:'Aug 27, 2026',description:'Tea stall team payroll',category:'Labor',vendor:'MuRsHiD KhAnA',amount:15000,status:'Paid'}
 ];
 
 export const initialStaff = [
