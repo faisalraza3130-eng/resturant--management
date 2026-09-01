@@ -80,7 +80,7 @@ const Welcome = ({ onEnter }) => {
       </div>
 
       <div className="welcome-footer animate-fade-in" style={{ animationDelay: '2s' }}>
-        Est. 2026 · MuRsHiD KhAnA · Smart Stall v2.1
+        Est. 2026 · MuRsHiD KhAnA · Smart Stall v2.1.1
       </div>
     </div>
   );
