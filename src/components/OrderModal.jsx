@@ -3,7 +3,7 @@ import Modal from './Modal';
 import { money } from '../utils';
 import CustomSelect from './CustomSelect';
 
-const OrderModal = ({ isOpen, onClose, onSave, menu, customers }) => {
+const OrderModal = ({ isOpen, onClose, onSave, menu, customers, editingOrder }) => {
   const [orderType, setOrderType] = useState('Dine-in');
   const [label, setLabel] = useState('');
   const [cart, setCart] = useState([]);
@@ -18,17 +18,28 @@ const OrderModal = ({ isOpen, onClose, onSave, menu, customers }) => {
 
   useEffect(() => {
     if (isOpen) {
-      setOrderType('Dine-in');
-      setLabel('');
-      setCart([]);
+      if (editingOrder) {
+        setOrderType(editingOrder.type);
+        setLabel(editingOrder.label);
+        setCart(editingOrder.items);
+        if (editingOrder.type === 'Delivery' && editingOrder.deliveryDetails) {
+          setDeliveryName(editingOrder.deliveryDetails.name);
+          setDeliveryPhone(editingOrder.deliveryDetails.phone);
+          setDeliveryAddress(editingOrder.deliveryDetails.address);
+        }
+      } else {
+        setOrderType('Dine-in');
+        setLabel('Table ');
+        setCart([]);
+        setDeliveryName('');
+        setDeliveryPhone('');
+        setDeliveryAddress('');
+      }
       setItemSearch('');
       setActiveCategory('All');
       setActiveBrand('All');
-      setDeliveryName('');
-      setDeliveryPhone('');
-      setDeliveryAddress('');
     }
-  }, [isOpen]);
+  }, [isOpen, editingOrder]);
 
   const handlePhoneLookup = (phone) => {
     setDeliveryPhone(phone);
@@ -80,6 +91,28 @@ const OrderModal = ({ isOpen, onClose, onSave, menu, customers }) => {
     return matchesAvailability && matchesCategory && matchesBrand && matchesSearch;
   });
 
+  const handleTypeChange = (newType) => {
+    setOrderType(newType);
+    if (newType === 'Dine-in' && !label.startsWith('Table ')) {
+      setLabel('Table ');
+    } else if (newType !== 'Dine-in' && label === 'Table ') {
+      setLabel('');
+    }
+  };
+
+  const handleLabelChange = (val) => {
+    if (orderType === 'Dine-in') {
+      // Prevent deleting "Table " prefix
+      if (!val.startsWith('Table ')) {
+        setLabel('Table ' + val.replace(/^Table\s*/i, ''));
+      } else {
+        setLabel(val);
+      }
+    } else {
+      setLabel(val);
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (cart.length === 0) return;
@@ -109,7 +142,7 @@ const OrderModal = ({ isOpen, onClose, onSave, menu, customers }) => {
       id="order-modal"
       isOpen={isOpen}
       onClose={onClose}
-      title="Start new order"
+      title={editingOrder ? `Edit Order ${editingOrder.id}` : "Start new order"}
       style={{ width: 'min(780px, 100%)' }}
     >
       <form onSubmit={handleSubmit}>
@@ -120,16 +153,16 @@ const OrderModal = ({ isOpen, onClose, onSave, menu, customers }) => {
               <CustomSelect
                 options={typeOptions}
                 value={orderType}
-                onChange={setOrderType}
+                onChange={handleTypeChange}
               />
             </div>
             <div className="field">
-              <label>{orderType === 'Delivery' ? 'Customer Phone' : 'Table or customer label'}</label>
+              <label>{orderType === 'Delivery' ? 'Customer Phone' : 'Table No'}</label>
               <input
                 className="input"
                 placeholder={orderType === 'Delivery' ? 'e.g. 0300-1234567' : 'e.g. Table 05'}
                 value={orderType === 'Delivery' ? deliveryPhone : label}
-                onChange={(e) => orderType === 'Delivery' ? handlePhoneLookup(e.target.value) : setLabel(e.target.value)}
+                onChange={(e) => orderType === 'Delivery' ? handlePhoneLookup(e.target.value) : handleLabelChange(e.target.value)}
               />
             </div>
             {orderType === 'Delivery' && (
@@ -274,7 +307,9 @@ const OrderModal = ({ isOpen, onClose, onSave, menu, customers }) => {
         </div>
         <div className="modal-foot">
           <button type="button" className="button button-secondary" onClick={onClose}>Cancel</button>
-          <button type="submit" className="button button-primary" disabled={cart.length === 0}>Save order</button>
+          <button type="submit" className="button button-primary" disabled={cart.length === 0}>
+            {editingOrder ? 'Update order' : 'Save order'}
+          </button>
         </div>
       </form>
     </Modal>

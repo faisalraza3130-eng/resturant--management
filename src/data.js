@@ -35,9 +35,9 @@ export const initialMenu = [
 ];
 
 export const initialOrders = [
-  {id:'#1048',type:'Dine-in',label:'Table 05',items:[{menuId:3,qty:2},{menuId:1,qty:1}],status:'Preparing',time:'12:42 PM',paid:false},
-  {id:'#1047',type:'Takeout',label:'Counter',items:[{menuId:4,qty:1},{menuId:8,qty:1}],status:'Ready',time:'12:35 PM',paid:false},
-  {id:'#1046',type:'Dine-in',label:'Table 02',items:[{menuId:5,qty:2}],status:'Completed',time:'12:18 PM',paid:true}
+  {id:'#1048',date:'2026-09-01',type:'Dine-in',label:'Table 05',items:[{menuId:3,qty:2},{menuId:1,qty:1}],status:'Preparing',time:'12:42 PM',paid:false},
+  {id:'#1047',date:'2026-09-01',type:'Takeout',label:'Counter',items:[{menuId:4,qty:1},{menuId:8,qty:1}],status:'Ready',time:'12:35 PM',paid:false},
+  {id:'#1046',date:'2026-08-31',type:'Dine-in',label:'Table 02',items:[{menuId:5,qty:2}],status:'Completed',time:'12:18 PM',paid:true}
 ];
 
 export const initialInventory = [

@@ -1,0 +1,103 @@
+import React, { useState } from 'react';
+import Modal from './Modal';
+import { money, getISODate } from '../utils';
+
+const HistoryModal = ({ isOpen, onClose, orders, menu }) => {
+  const [selectedDate, setSelectedDate] = useState(getISODate());
+
+  const itemById = id => menu.find(item => item.id === id);
+  const orderTotal = order => order.items.reduce((sum, line) => sum + (itemById(line.menuId)?.price || 0) * line.qty, 0);
+
+  const dailyOrders = orders.filter(o => o.date === selectedDate);
+  const totalSales = dailyOrders.reduce((sum, o) => sum + orderTotal(o), 0);
+  const totalCount = dailyOrders.length;
+  const aov = totalCount > 0 ? totalSales / totalCount : 0;
+
+  return (
+    <Modal
+      id="history-modal"
+      isOpen={isOpen}
+      onClose={onClose}
+      title="Order History & Analytics"
+      style={{ width: 'min(900px, 95%)', maxHeight: '90vh' }}
+    >
+      <div className="modal-body" style={{ overflowY: 'auto' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '25px', background: '#f8fafc', padding: '15px', borderRadius: '12px', flexWrap: 'wrap', gap: '15px' }}>
+          <div className="field" style={{ margin: 0, minWidth: '200px' }}>
+            <label style={{ fontSize: '12px', fontWeight: 'bold', color: 'var(--navy)' }}>Select Date</label>
+            <input
+              type="date"
+              className="input"
+              value={selectedDate}
+              onChange={(e) => setSelectedDate(e.target.value)}
+              style={{ padding: '8px' }}
+            />
+          </div>
+
+          <div style={{ display: 'flex', gap: '20px', flex: 1, justifyContent: 'flex-end' }}>
+            <div className="stat-card" style={{ background: 'white', padding: '10px 20px', borderRadius: '12px', border: '1px solid var(--line)', textAlign: 'center', minWidth: '120px' }}>
+              <div className="muted" style={{ fontSize: '11px', textTransform: 'uppercase', fontWeight: 'bold' }}>Total Sales</div>
+              <div style={{ fontSize: '18px', fontWeight: 'bold', color: 'var(--accent)' }}>Rs. {totalSales}</div>
+            </div>
+            <div className="stat-card" style={{ background: 'white', padding: '10px 20px', borderRadius: '12px', border: '1px solid var(--line)', textAlign: 'center', minWidth: '100px' }}>
+              <div className="muted" style={{ fontSize: '11px', textTransform: 'uppercase', fontWeight: 'bold' }}>Orders</div>
+              <div style={{ fontSize: '18px', fontWeight: 'bold', color: 'var(--navy)' }}>{totalCount}</div>
+            </div>
+            <div className="stat-card" style={{ background: 'white', padding: '10px 20px', borderRadius: '12px', border: '1px solid var(--line)', textAlign: 'center', minWidth: '120px' }}>
+              <div className="muted" style={{ fontSize: '11px', textTransform: 'uppercase', fontWeight: 'bold' }}>Avg Value</div>
+              <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#059669' }}>Rs. {Math.round(aov)}</div>
+            </div>
+          </div>
+        </div>
+
+        <div className="card table-wrap" style={{ margin: 0 }}>
+          <table style={{ fontSize: '13px' }}>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Time</th>
+                <th>Type</th>
+                <th>Table/Cust</th>
+                <th>Items</th>
+                <th className="text-right">Amount</th>
+                <th className="text-center">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {dailyOrders.length > 0 ? (
+                dailyOrders.map(o => (
+                  <tr key={o.id}>
+                    <td className="font-mono">{o.id}</td>
+                    <td className="muted">{o.time}</td>
+                    <td><span className="badge info" style={{ fontSize: '10px' }}>{o.type}</span></td>
+                    <td>{o.label}</td>
+                    <td>
+                      <div className="muted" style={{ fontSize: '11px' }}>
+                        {o.items.map((line, idx) => (
+                          <div key={idx}>{line.qty} × {itemById(line.menuId)?.name}</div>
+                        ))}
+                      </div>
+                    </td>
+                    <td className="text-right font-medium">Rs. {orderTotal(o)}</td>
+                    <td className="text-center"><span className={`badge ${o.status === 'Completed' ? 'ready' : 'info'}`} style={{ fontSize: '10px' }}>{o.status}</span></td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="7" style={{ textAlign: 'center', padding: '40px' }} className="muted">
+                    No orders found for this date.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div className="modal-foot">
+        <button className="button button-secondary" onClick={onClose}>Close History</button>
+      </div>
+    </Modal>
+  );
+};
+
+export default HistoryModal;

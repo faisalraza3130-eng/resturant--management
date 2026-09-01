@@ -1,5 +1,5 @@
 // MuRsHiD KhAnA - Operational Dashboard (v1.1.0)
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
 import Topbar from './components/Topbar';
 import Dashboard from './pages/Dashboard';
@@ -17,6 +17,12 @@ import OrderModal from './components/OrderModal';
 import StaffModal from './components/StaffModal';
 import ExpenseModal from './components/ExpenseModal';
 import StockModal from './components/StockModal';
+import AlertModal from './components/AlertModal';
+import HistoryModal from './components/HistoryModal';
+
+import {
+  getFormattedDate, getFormattedTime, getISODate
+} from './utils';
 
 import {
   initialMenu, initialOrders, initialInventory,
@@ -24,29 +30,57 @@ import {
 } from './data';
 
 const pageInfo = {
-  dashboard: { title: 'Dashboard', subtitle: 'Tuesday, September 1, 2026 · MuRsHiD KhAnA Overview' },
-  menu: { title: 'Menu', subtitle: 'Tuesday, September 1, 2026 · MuRsHiD KhAnA Menu' },
-  orders: { title: 'Orders', subtitle: 'Tuesday, September 1, 2026 · Active Orders' },
-  billing: { title: 'Billing', subtitle: 'Tuesday, September 1, 2026 · Payments & Receipts' },
-  inventory: { title: 'Inventory', subtitle: 'Tuesday, September 1, 2026 · Stock Control' },
-  expenses: { title: 'Expenses', subtitle: 'Tuesday, September 1, 2026 · Stall Expenses' },
-  staff: { title: 'Staff', subtitle: 'Tuesday, September 1, 2026 · Team MuRsHiD KhAnA' },
-  settings: { title: 'Settings & access', subtitle: 'Tuesday, September 1, 2026 · Workspace Controls' },
+  dashboard: { title: 'Dashboard', subtitle: 'MuRsHiD KhAnA Overview' },
+  menu: { title: 'Menu', subtitle: 'MuRsHiD KhAnA Menu' },
+  orders: { title: 'Orders', subtitle: 'Active Orders' },
+  billing: { title: 'Billing', subtitle: 'Payments & Receipts' },
+  inventory: { title: 'Inventory', subtitle: 'Stock Control' },
+  expenses: { title: 'Expenses', subtitle: 'Stall Expenses' },
+  staff: { title: 'Staff', subtitle: 'Team MuRsHiD KhAnA' },
+  settings: { title: 'Settings & access', subtitle: 'Workspace Controls' },
 };
 
 export default function App() {
+  const getStoredData = (key, fallback) => {
+    try {
+      const saved = localStorage.getItem(`mk_${key}`);
+      return saved ? JSON.parse(saved) : fallback;
+    } catch (e) {
+      return fallback;
+    }
+  };
+
   const [showWelcome, setShowWelcome] = useState(true);
   const [currentPage, setCurrentPage] = useState('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [menu, setMenu] = useState(initialMenu);
-  const [orders, setOrders] = useState(initialOrders);
-  const [inventory, setInventory] = useState(initialInventory);
-  const [customers, setCustomers] = useState(initialCustomers);
-  const [expenses, setExpenses] = useState(initialExpenses);
-  const [staff, setStaff] = useState(initialStaff);
+
+  const [menu, setMenu] = useState(() => getStoredData('menu', initialMenu));
+  const [orders, setOrders] = useState(() => getStoredData('orders', initialOrders));
+  const [inventory, setInventory] = useState(() => getStoredData('inventory', initialInventory));
+  const [customers, setCustomers] = useState(() => getStoredData('customers', initialCustomers));
+  const [expenses, setExpenses] = useState(() => getStoredData('expenses', initialExpenses));
+  const [staff, setStaff] = useState(() => getStoredData('staff', initialStaff));
   const [activeRole, setActiveRole] = useState('Manager');
 
+  useEffect(() => {
+    localStorage.setItem('mk_menu', JSON.stringify(menu));
+    localStorage.setItem('mk_orders', JSON.stringify(orders));
+    localStorage.setItem('mk_inventory', JSON.stringify(inventory));
+    localStorage.setItem('mk_customers', JSON.stringify(customers));
+    localStorage.setItem('mk_expenses', JSON.stringify(expenses));
+    localStorage.setItem('mk_staff', JSON.stringify(staff));
+  }, [menu, orders, inventory, customers, expenses, staff]);
+
   const [toast, setToast] = useState({ show: false, message: '' });
+  const [alert, setAlert] = useState({ show: false, title: '', message: '' });
+
+  const normalizeLabel = (label) => {
+    return label
+      .toLowerCase()
+      .replace(/^table\s*/, '') // Remove "table " from start
+      .replace(/^0+/, '')       // Remove leading zeros (e.g., "01" -> "1")
+      .trim();
+  };
 
   // Modal State
   const [modals, setModals] = useState({
@@ -54,9 +88,11 @@ export default function App() {
     order: false,
     staff: false,
     expense: false,
-    stock: false
+    stock: false,
+    history: false
   });
   const [editingMenuItem, setEditingMenuItem] = useState(null);
+  const [editingOrder, setEditingOrder] = useState(null);
   const [stockInitialItemId, setStockInitialItemId] = useState(null);
 
   const showToast = (message) => {
@@ -67,9 +103,14 @@ export default function App() {
   const toggleModal = (modal, isOpen, data = null) => {
     setModals(prev => ({ ...prev, [modal]: isOpen }));
     if (modal === 'menu' && !isOpen) setEditingMenuItem(null);
+    if (modal === 'order') {
+      if (!isOpen) setEditingOrder(null);
+      else if (data) setEditingOrder(data);
+    }
     if (modal === 'stock' && isOpen) setStockInitialItemId(data);
   };
 
+  const todayDisplay = getFormattedDate();
   const { title, subtitle } = pageInfo[currentPage];
 
   // Handlers
@@ -94,8 +135,37 @@ export default function App() {
   };
 
   const handleSaveOrder = (data) => {
-    const newOrderId = `#${1049 + orders.length}`;
-    setOrders([{ id: newOrderId, ...data, status: 'Preparing', time: 'Just now', paid: false }, ...orders]);
+    // Validation: Check if table is occupied (only for Dine-in)
+    if (data.type === 'Dine-in') {
+      const activeOrder = orders.find(o =>
+        normalizeLabel(o.label) === normalizeLabel(data.label) &&
+        o.status !== 'Completed' &&
+        o.status !== 'Cancelled' &&
+        (!editingOrder || o.id !== editingOrder.id)
+      );
+
+      if (activeOrder) {
+        setAlert({
+          show: true,
+          title: "Table Occupied!",
+          message: `${data.label} is currently occupied with an active order (#${activeOrder.id}). Please complete or cancel the existing order before starting a new one.`
+        });
+        return;
+      }
+    }
+
+    if (editingOrder) {
+      // Update existing order
+      setOrders(orders.map(o => o.id === editingOrder.id ? { ...o, ...data } : o));
+      showToast(`Order ${editingOrder.id} updated.`);
+    } else {
+      // Create new order
+      const newOrderId = `#${1049 + orders.length}`;
+      const today = getISODate();
+      const now = getFormattedTime();
+      setOrders([{ id: newOrderId, ...data, date: today, status: 'Preparing', time: now, paid: false }, ...orders]);
+      showToast(`Order ${newOrderId} created.`);
+    }
 
     // Save/Update customer history if it's a delivery
     if (data.type === 'Delivery' && data.deliveryDetails) {
@@ -107,7 +177,7 @@ export default function App() {
         const updatedCustomers = [...customers];
         updatedCustomers[existingIndex] = {
           ...updatedCustomers[existingIndex],
-          name: name, // In case name changed
+          name: name,
           address: address,
           visits: updatedCustomers[existingIndex].visits + 1,
           last: 'Aug 29, 2026'
@@ -131,7 +201,6 @@ export default function App() {
 
     toggleModal('order', false);
     setCurrentPage('orders');
-    showToast(`Order ${newOrderId} created.`);
   };
 
   const handleStatusChange = (id, status) => {
@@ -167,16 +236,28 @@ export default function App() {
     showToast('Inventory updated.');
   };
 
+  const resetData = () => {
+    if (window.confirm('Reset all application data? This will clear all orders and restore default settings.')) {
+      setMenu(initialMenu);
+      setOrders(initialOrders);
+      setInventory(initialInventory);
+      setCustomers(initialCustomers);
+      setExpenses(initialExpenses);
+      setStaff(initialStaff);
+      showToast('System data reset to defaults.');
+    }
+  };
+
   const renderContent = () => {
     switch (currentPage) {
       case 'dashboard': return <Dashboard orders={orders} menu={menu} onNewOrder={() => toggleModal('order', true)} onNavigate={navigate} />;
       case 'menu': return <Menu menu={menu} onToggleAvailability={handleToggleAvailability} onDeleteItem={handleDeleteMenuItem} onEditItem={(item) => { setEditingMenuItem(item); toggleModal('menu', true); }} onAddItem={() => toggleModal('menu', true)} />;
-      case 'orders': return <Orders orders={orders} menu={menu} onStatusChange={handleStatusChange} onNewOrder={() => toggleModal('order', true)} />;
+      case 'orders': return <Orders orders={orders} menu={menu} onStatusChange={handleStatusChange} onNewOrder={() => toggleModal('order', true)} onEditOrder={(order) => toggleModal('order', true, order)} onOpenHistory={() => toggleModal('history', true)} />;
       case 'billing': return <Billing orders={orders} menu={menu} onMarkPaid={handleMarkPaid} />;
       case 'inventory': return <Inventory inventory={inventory} onOpenStockModal={(id) => toggleModal('stock', true, id)} />;
       case 'staff': return <Staff staff={staff} onToggleStaff={handleToggleStaff} onAddStaff={() => toggleModal('staff', true)} />;
       case 'expenses': return <Expenses expenses={expenses} onAddExpense={() => toggleModal('expense', true)} />;
-      case 'settings': return <Settings activeRole={activeRole} onChangeRole={setActiveRole} />;
+      case 'settings': return <Settings activeRole={activeRole} onChangeRole={setActiveRole} onResetData={resetData} />;
       default: return null;
     }
   };
@@ -195,7 +276,7 @@ export default function App() {
       <div className={`sidebar-overlay ${isSidebarOpen ? 'active' : ''}`} onClick={() => setIsSidebarOpen(false)}></div>
       <Sidebar currentPage={currentPage} onPageChange={navigate} isOpen={isSidebarOpen} />
       <main className="main">
-        <Topbar title={title} subtitle={subtitle} onMenuClick={() => setIsSidebarOpen(true)} />
+        <Topbar title={title} subtitle={`${todayDisplay} · ${subtitle}`} onMenuClick={() => setIsSidebarOpen(true)} />
         <div className="content">
           {renderContent()}
         </div>
@@ -203,10 +284,17 @@ export default function App() {
       <div className={`toast ${toast.show ? 'show' : ''}`}>{toast.message}</div>
 
       <MenuModal isOpen={modals.menu} onClose={() => toggleModal('menu', false)} onSave={handleSaveMenuItem} editingItem={editingMenuItem} />
-      <OrderModal isOpen={modals.order} onClose={() => toggleModal('order', false)} onSave={handleSaveOrder} menu={menu} customers={customers} />
+      <OrderModal isOpen={modals.order} onClose={() => toggleModal('order', false)} onSave={handleSaveOrder} menu={menu} customers={customers} editingOrder={editingOrder} />
       <StaffModal isOpen={modals.staff} onClose={() => toggleModal('staff', false)} onSave={handleSaveStaff} />
       <ExpenseModal isOpen={modals.expense} onClose={() => toggleModal('expense', false)} onSave={handleSaveExpense} />
       <StockModal isOpen={modals.stock} onClose={() => toggleModal('stock', false)} onSave={handleSaveStock} inventory={inventory} initialItemId={stockInitialItemId} />
+      <HistoryModal isOpen={modals.history} onClose={() => toggleModal('history', false)} orders={orders} menu={menu} />
+      <AlertModal
+        isOpen={alert.show}
+        onClose={() => setAlert({ ...alert, show: false })}
+        title={alert.title}
+        message={alert.message}
+      />
     </div>
   );
 }
