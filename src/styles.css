@@ -17,7 +17,10 @@
   --shadow: 0 9px 28px rgba(23, 38, 59, .07);
   --radius: 14px;
 }
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
 
 body {
   margin: 0;
@@ -29,8 +32,13 @@ body {
 }
 @media (max-width: 640px) {
   body { font-size: 15px; }
+  .input, select, textarea { font-size: 16px !important; } /* Prevents iOS zoom */
 }
-button, input, select, textarea { font: inherit; }
+button, input, select, textarea {
+  font: inherit;
+  -webkit-appearance: none;
+  appearance: none;
+}
 button { cursor: pointer; touch-action: manipulation; }
 
 .app { min-height: 100vh; display: flex; overflow-x: hidden; width: 100%; }
@@ -146,7 +154,14 @@ button { cursor: pointer; touch-action: manipulation; }
 .avatar { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; color: #fff; background: var(--accent); font-weight: 700; font-size: 12px; }
 .user strong { display: block; font-size: 12px; }
 .user span { color: var(--muted); font-size: 11px; }
-.content { padding: 30px 34px 44px; max-width: 100%; margin: 0 auto; width: 100%; box-sizing: border-box; }
+.content {
+  padding: 30px 34px 44px;
+  max-width: 100%;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+  padding-bottom: calc(44px + env(safe-area-inset-bottom, 0px));
+}
 @media (max-width: 640px) {
   .content { padding: 18px 20px 40px; }
 }
