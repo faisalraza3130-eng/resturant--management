@@ -23,7 +23,7 @@ const HistoryModal = ({ isOpen, onClose, orders, menu }) => {
     >
       <div className="modal-body" style={{ overflowY: 'auto' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '25px', background: '#f8fafc', padding: '15px', borderRadius: '12px', flexWrap: 'wrap', gap: '15px' }}>
-          <div className="field" style={{ margin: 0, minWidth: '200px' }}>
+          <div className="field" style={{ margin: 0, flex: '1 1 200px' }}>
             <label style={{ fontSize: '12px', fontWeight: 'bold', color: 'var(--navy)' }}>Select Date</label>
             <input
               type="date"
@@ -34,18 +34,18 @@ const HistoryModal = ({ isOpen, onClose, orders, menu }) => {
             />
           </div>
 
-          <div style={{ display: 'flex', gap: '20px', flex: 1, justifyContent: 'flex-end' }}>
-            <div className="stat-card" style={{ background: 'white', padding: '10px 20px', borderRadius: '12px', border: '1px solid var(--line)', textAlign: 'center', minWidth: '120px' }}>
-              <div className="muted" style={{ fontSize: '11px', textTransform: 'uppercase', fontWeight: 'bold' }}>Total Sales</div>
-              <div style={{ fontSize: '18px', fontWeight: 'bold', color: 'var(--accent)' }}>Rs. {totalSales}</div>
+          <div style={{ display: 'flex', gap: '10px', flex: '1 1 300px', justifyContent: 'flex-end', flexWrap: 'wrap' }}>
+            <div className="stat-card" style={{ background: 'white', padding: '10px 10px', borderRadius: '12px', border: '1px solid var(--line)', textAlign: 'center', flex: '1', minWidth: '90px' }}>
+              <div className="muted" style={{ fontSize: '9px', textTransform: 'uppercase', fontWeight: 'bold', whiteSpace: 'nowrap' }}>Total Sales</div>
+              <div style={{ fontSize: '15px', fontWeight: 'bold', color: 'var(--accent)', whiteSpace: 'nowrap' }}>Rs. {totalSales}</div>
             </div>
-            <div className="stat-card" style={{ background: 'white', padding: '10px 20px', borderRadius: '12px', border: '1px solid var(--line)', textAlign: 'center', minWidth: '100px' }}>
-              <div className="muted" style={{ fontSize: '11px', textTransform: 'uppercase', fontWeight: 'bold' }}>Orders</div>
-              <div style={{ fontSize: '18px', fontWeight: 'bold', color: 'var(--navy)' }}>{totalCount}</div>
+            <div className="stat-card" style={{ background: 'white', padding: '10px 10px', borderRadius: '12px', border: '1px solid var(--line)', textAlign: 'center', flex: '1', minWidth: '70px' }}>
+              <div className="muted" style={{ fontSize: '9px', textTransform: 'uppercase', fontWeight: 'bold', whiteSpace: 'nowrap' }}>Orders</div>
+              <div style={{ fontSize: '15px', fontWeight: 'bold', color: 'var(--navy)', whiteSpace: 'nowrap' }}>{totalCount}</div>
             </div>
-            <div className="stat-card" style={{ background: 'white', padding: '10px 20px', borderRadius: '12px', border: '1px solid var(--line)', textAlign: 'center', minWidth: '120px' }}>
-              <div className="muted" style={{ fontSize: '11px', textTransform: 'uppercase', fontWeight: 'bold' }}>Avg Value</div>
-              <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#059669' }}>Rs. {Math.round(aov)}</div>
+            <div className="stat-card" style={{ background: 'white', padding: '10px 10px', borderRadius: '12px', border: '1px solid var(--line)', textAlign: 'center', flex: '1', minWidth: '90px' }}>
+              <div className="muted" style={{ fontSize: '9px', textTransform: 'uppercase', fontWeight: 'bold', whiteSpace: 'nowrap' }}>Avg Value</div>
+              <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#059669', whiteSpace: 'nowrap' }}>Rs. {Math.round(aov)}</div>
             </div>
           </div>
         </div>
