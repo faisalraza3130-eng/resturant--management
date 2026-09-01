@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import Modal from './Modal';
 import { money } from '../utils';
+import CustomSelect from './CustomSelect';
 
 const OrderModal = ({ isOpen, onClose, onSave, menu, customers }) => {
   const [orderType, setOrderType] = useState('Dine-in');
   const [label, setLabel] = useState('');
   const [cart, setCart] = useState([]);
   const [itemSearch, setItemSearch] = useState('');
+  const [activeCategory, setActiveCategory] = useState('All');
+  const [activeBrand, setActiveBrand] = useState('All');
 
   // Delivery details
   const [deliveryName, setDeliveryName] = useState('');
@@ -19,6 +22,8 @@ const OrderModal = ({ isOpen, onClose, onSave, menu, customers }) => {
       setLabel('');
       setCart([]);
       setItemSearch('');
+      setActiveCategory('All');
+      setActiveBrand('All');
       setDeliveryName('');
       setDeliveryPhone('');
       setDeliveryAddress('');
@@ -56,11 +61,24 @@ const OrderModal = ({ isOpen, onClose, onSave, menu, customers }) => {
   const itemById = id => menu.find(item => item.id === id);
   const subtotal = cart.reduce((sum, c) => sum + (itemById(c.menuId)?.price || 0) * c.qty, 0);
 
-  const filteredMenu = menu.filter(i =>
-    i.available &&
-    (i.name.toLowerCase().includes(itemSearch.toLowerCase()) ||
-     i.code.toLowerCase().includes(itemSearch.toLowerCase()))
-  );
+  const filteredMenu = menu.filter(i => {
+    const matchesAvailability = i.available;
+    const matchesCategory = activeCategory === 'All' || i.category === activeCategory;
+
+    let matchesBrand = true;
+    if (activeCategory === 'Drinks' && activeBrand !== 'All') {
+      // Direct brand property check
+      const brandMatch = i.brand === activeBrand;
+      // Fallback: Check if brand name is in item name (e.g., "Coca Cola - 0.5L")
+      const nameMatch = i.name.toLowerCase().includes(activeBrand.toLowerCase());
+      matchesBrand = brandMatch || nameMatch;
+    }
+
+    const matchesSearch = i.name.toLowerCase().includes(itemSearch.toLowerCase()) ||
+                          i.code.toLowerCase().includes(itemSearch.toLowerCase());
+
+    return matchesAvailability && matchesCategory && matchesBrand && matchesSearch;
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -77,6 +95,15 @@ const OrderModal = ({ isOpen, onClose, onSave, menu, customers }) => {
     });
   };
 
+  const typeOptions = [
+    { value: 'Dine-in', label: 'Dine-in' },
+    { value: 'Takeout', label: 'Takeout' },
+    { value: 'Delivery', label: 'Delivery' }
+  ];
+
+  const categories = ['All', 'Tea', 'Drinks', 'Fries', 'Fast Food'];
+  const drinkBrands = ['All', 'Coca Cola', 'Pepsi', 'Sprite', 'Mountain Dew'];
+
   return (
     <Modal
       id="order-modal"
@@ -90,21 +117,17 @@ const OrderModal = ({ isOpen, onClose, onSave, menu, customers }) => {
           <div className="modal-grid" style={{ marginBottom: '15px' }}>
             <div className="field">
               <label>Order type</label>
-              <select
-                className="input"
+              <CustomSelect
+                options={typeOptions}
                 value={orderType}
-                onChange={(e) => setOrderType(e.target.value)}
-              >
-                <option>Dine-in</option>
-                <option>Takeout</option>
-                <option>Delivery</option>
-              </select>
+                onChange={setOrderType}
+              />
             </div>
             <div className="field">
               <label>{orderType === 'Delivery' ? 'Customer Phone' : 'Table or customer label'}</label>
               <input
                 className="input"
-                placeholder={orderType === 'Delivery' ? 'e.g. 555-0123' : 'e.g. Table 12'}
+                placeholder={orderType === 'Delivery' ? 'e.g. 0300-1234567' : 'e.g. Table 05'}
                 value={orderType === 'Delivery' ? deliveryPhone : label}
                 onChange={(e) => orderType === 'Delivery' ? handlePhoneLookup(e.target.value) : setLabel(e.target.value)}
               />
@@ -115,7 +138,7 @@ const OrderModal = ({ isOpen, onClose, onSave, menu, customers }) => {
                   <label>Customer Name</label>
                   <input
                     className="input"
-                    placeholder="e.g. Jordan Reed"
+                    placeholder="e.g. Ali Khan"
                     value={deliveryName}
                     onChange={(e) => setDeliveryName(e.target.value)}
                   />
@@ -124,7 +147,7 @@ const OrderModal = ({ isOpen, onClose, onSave, menu, customers }) => {
                   <label>Delivery Address</label>
                   <input
                     className="input"
-                    placeholder="e.g. 123 Harbor Way, Apt 4B"
+                    placeholder="e.g. House 12, Street 4, Sector G-10"
                     value={deliveryAddress}
                     onChange={(e) => setDeliveryAddress(e.target.value)}
                   />
@@ -132,9 +155,62 @@ const OrderModal = ({ isOpen, onClose, onSave, menu, customers }) => {
               </>
             )}
           </div>
+
+          <div className="category-tabs" style={{ display: 'flex', gap: '8px', marginBottom: '15px', overflowX: 'auto', paddingBottom: '5px' }}>
+            {categories.map(cat => (
+              <button
+                key={cat}
+                type="button"
+                className={`mini-button ${activeCategory === cat ? 'active' : ''}`}
+                style={{
+                  padding: '8px 16px',
+                  borderRadius: '20px',
+                  background: activeCategory === cat ? 'var(--accent)' : 'white',
+                  color: activeCategory === cat ? 'white' : 'var(--muted)',
+                  borderColor: activeCategory === cat ? 'var(--accent)' : 'var(--line)',
+                  whiteSpace: 'nowrap'
+                }}
+                onClick={() => {
+                  setActiveCategory(cat);
+                  setActiveBrand('All');
+                }}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
+          {activeCategory === 'Drinks' && (
+            <div className="brand-tabs" style={{ display: 'flex', gap: '8px', marginBottom: '15px', overflowX: 'auto', paddingBottom: '5px', background: '#f8fafc', padding: '10px', borderRadius: '12px' }}>
+              {drinkBrands.map(brand => (
+                <button
+                  key={brand}
+                  type="button"
+                  className={`mini-button ${activeBrand === brand ? 'active' : ''}`}
+                  style={{
+                    padding: '6px 12px',
+                    borderRadius: '8px',
+                    fontSize: '12px',
+                    background: activeBrand === brand ? 'var(--navy)' : 'white',
+                    color: activeBrand === brand ? 'white' : 'var(--muted)',
+                    borderColor: activeBrand === brand ? 'var(--navy)' : 'var(--line)',
+                    whiteSpace: 'nowrap'
+                  }}
+                  onClick={() => setActiveBrand(brand)}
+                >
+                  {brand}
+                </button>
+              ))}
+            </div>
+          )}
+
           <div className="new-order-layout">
             <div className="menu-pick">
-              <h4>Select available menu items</h4>
+              <h4>
+                {activeCategory === 'Drinks' && activeBrand !== 'All'
+                  ? `Select ${activeBrand} sizes`
+                  : `Select ${activeCategory !== 'All' ? activeCategory : 'MuRsHiD KhAnA'} items`}
+              </h4>
               <div className="search" style={{ marginTop: '10px' }}>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <circle cx="10.7" cy="10.7" r="6.7"/>
@@ -142,23 +218,27 @@ const OrderModal = ({ isOpen, onClose, onSave, menu, customers }) => {
                 </svg>
                 <input
                   className="input"
-                  placeholder="Search by item name or code..."
+                  placeholder="Search item name or code..."
                   value={itemSearch}
                   onChange={(e) => setItemSearch(e.target.value)}
                 />
               </div>
               <div className="pick-grid">
-                {filteredMenu.map(item => (
-                  <button
-                    key={item.id}
-                    type="button"
-                    className="pick"
-                    onClick={() => addToCart(item)}
-                  >
-                    <strong>{item.name}</strong>
-                    <span>{money(item.price)}</span>
-                  </button>
-                ))}
+                {filteredMenu.length > 0 ? (
+                  filteredMenu.map(item => (
+                    <button
+                      key={item.id}
+                      type="button"
+                      className="pick"
+                      onClick={() => addToCart(item)}
+                    >
+                      <strong>{item.name}</strong>
+                      <span>Rs. {item.price}</span>
+                    </button>
+                  ))
+                ) : (
+                  <div className="empty" style={{ gridColumn: 'span 2', padding: '20px' }}>No items found.</div>
+                )}
               </div>
             </div>
             <div className="cart">
@@ -179,7 +259,7 @@ const OrderModal = ({ isOpen, onClose, onSave, menu, customers }) => {
                           <span>{c.qty}</span>
                           <button type="button" onClick={() => adjustCart(c.menuId, 1)}>+</button>
                         </div>
-                        <span>{money((i?.price || 0) * c.qty)}</span>
+                        <span>Rs. {(i?.price || 0) * c.qty}</span>
                       </div>
                     );
                   })}
@@ -187,14 +267,14 @@ const OrderModal = ({ isOpen, onClose, onSave, menu, customers }) => {
               )}
               <div className="cart-total">
                 <span>Subtotal</span>
-                <span>{money(subtotal)}</span>
+                <span>Rs. {subtotal}</span>
               </div>
             </div>
           </div>
         </div>
         <div className="modal-foot">
-          <button type="button" class="button button-secondary" onClick={onClose}>Cancel</button>
-          <button type="submit" class="button button-primary" disabled={cart.length === 0}>Save order</button>
+          <button type="button" className="button button-secondary" onClick={onClose}>Cancel</button>
+          <button type="submit" className="button button-primary" disabled={cart.length === 0}>Save order</button>
         </div>
       </form>
     </Modal>

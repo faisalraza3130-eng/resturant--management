@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { money, badge } from '../utils';
+import CustomSelect from '../components/CustomSelect';
 
 const Orders = ({ orders, menu, onStatusChange, onNewOrder }) => {
   const [search, setSearch] = useState('');
@@ -16,12 +17,36 @@ const Orders = ({ orders, menu, onStatusChange, onNewOrder }) => {
     return matchesSearch && matchesStatus && matchesType;
   });
 
+  const statusOptions = [
+    { value: 'all', label: 'All Statuses' },
+    { value: 'New', label: 'New' },
+    { value: 'Preparing', label: 'Preparing' },
+    { value: 'Ready', label: 'Ready' },
+    { value: 'Completed', label: 'Completed' },
+    { value: 'Cancelled', label: 'Cancelled' }
+  ];
+
+  const typeOptions = [
+    { value: 'all', label: 'All Types' },
+    { value: 'Dine-in', label: 'Dine-in' },
+    { value: 'Takeout', label: 'Takeout' },
+    { value: 'Delivery', label: 'Delivery' }
+  ];
+
+  const inlineStatusOptions = [
+    { value: 'New', label: 'New' },
+    { value: 'Preparing', label: 'Preparing' },
+    { value: 'Ready', label: 'Ready' },
+    { value: 'Completed', label: 'Completed' },
+    { value: 'Cancelled', label: 'Cancelled' }
+  ];
+
   return (
     <section className="page active">
       <div className="page-head">
         <div>
           <h2>Orders tracking</h2>
-          <p>Track every order from the first ticket to completion.</p>
+          <p>Track every tea and burger order from ticket to completion.</p>
         </div>
         <div className="head-actions">
           <button className="button button-primary" onClick={onNewOrder}>
@@ -36,14 +61,18 @@ const Orders = ({ orders, menu, onStatusChange, onNewOrder }) => {
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="10.7" cy="10.7" r="6.7"/><path d="m16 16 5 5"/></svg>
           <input className="input" placeholder="Search order number or table..." value={search} onChange={(e) => setSearch(e.target.value)} />
         </div>
-        <select className="input select-small" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
-          <option value="all">All statuses</option>
-          <option>New</option><option>Preparing</option><option>Ready</option><option>Completed</option><option>Cancelled</option>
-        </select>
-        <select className="input select-small" value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}>
-          <option value="all">All types</option>
-          <option>Dine-in</option><option>Takeout</option><option>Delivery</option>
-        </select>
+        <CustomSelect
+          options={statusOptions}
+          value={statusFilter}
+          onChange={setStatusFilter}
+          className="select-small"
+        />
+        <CustomSelect
+          options={typeOptions}
+          value={typeFilter}
+          onChange={setTypeFilter}
+          className="select-small"
+        />
       </div>
 
       <div className="card table-wrap">
@@ -79,18 +108,14 @@ const Orders = ({ orders, menu, onStatusChange, onNewOrder }) => {
                       ))}
                     </div>
                   </td>
-                  <td className="text-right font-medium tabular-nums">{money(orderTotal(o))}</td>
+                  <td className="text-right font-medium tabular-nums">Rs. {orderTotal(o)}</td>
                   <td className="text-center">
-                    <select
-                      className="input"
-                      style={{ width: 'auto', padding: '6px 10px', fontSize: '12px', height: '36px', minHeight: '36px' }}
+                    <CustomSelect
+                      options={inlineStatusOptions}
                       value={o.status}
-                      onChange={(e) => onStatusChange(o.id, e.target.value)}
-                    >
-                      {['New', 'Preparing', 'Ready', 'Completed', 'Cancelled'].map(x => (
-                        <option key={x} value={x}>{x}</option>
-                      ))}
-                    </select>
+                      onChange={(val) => onStatusChange(o.id, val)}
+                      className="select-small"
+                    />
                   </td>
                 </tr>
               ))
@@ -105,3 +130,4 @@ const Orders = ({ orders, menu, onStatusChange, onNewOrder }) => {
 };
 
 export default Orders;
+

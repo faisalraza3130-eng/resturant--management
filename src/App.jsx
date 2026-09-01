@@ -1,4 +1,4 @@
-// Harbor & Hearth - Operational Dashboard (v1.0.10)
+// MuRsHiD KhAnA - Operational Dashboard (v1.1.0)
 import React, { useState } from 'react';
 import Sidebar from './components/Sidebar';
 import Topbar from './components/Topbar';
@@ -10,7 +10,7 @@ import Inventory from './pages/Inventory';
 import Staff from './pages/Staff';
 import Expenses from './pages/Expenses';
 import Settings from './pages/Settings';
-import AICenter from './pages/AICenter';
+import Welcome from './pages/Welcome';
 
 import MenuModal from './components/MenuModal';
 import OrderModal from './components/OrderModal';
@@ -24,18 +24,18 @@ import {
 } from './data';
 
 const pageInfo = {
-  dashboard: { title: 'Dashboard', subtitle: 'Saturday, August 29, 2026 · Service overview' },
-  menu: { title: 'Menu', subtitle: 'Saturday, August 29, 2026 · Menu management' },
-  orders: { title: 'Orders', subtitle: 'Saturday, August 29, 2026 · Order tracking' },
-  billing: { title: 'Billing', subtitle: 'Saturday, August 29, 2026 · Payments and receipts' },
-  inventory: { title: 'Inventory', subtitle: 'Saturday, August 29, 2026 · Stock control' },
-  expenses: { title: 'Expenses', subtitle: 'Saturday, August 29, 2026 · Operating costs' },
-  staff: { title: 'Staff', subtitle: 'Saturday, August 29, 2026 · Team management' },
-  ai: { title: 'AI Center', subtitle: 'Saturday, August 29, 2026 · Operations Intelligence' },
-  settings: { title: 'Settings & access', subtitle: 'Saturday, August 29, 2026 · Workspace controls' },
+  dashboard: { title: 'Dashboard', subtitle: 'Tuesday, September 1, 2026 · MuRsHiD KhAnA Overview' },
+  menu: { title: 'Menu', subtitle: 'Tuesday, September 1, 2026 · MuRsHiD KhAnA Menu' },
+  orders: { title: 'Orders', subtitle: 'Tuesday, September 1, 2026 · Active Orders' },
+  billing: { title: 'Billing', subtitle: 'Tuesday, September 1, 2026 · Payments & Receipts' },
+  inventory: { title: 'Inventory', subtitle: 'Tuesday, September 1, 2026 · Stock Control' },
+  expenses: { title: 'Expenses', subtitle: 'Tuesday, September 1, 2026 · Stall Expenses' },
+  staff: { title: 'Staff', subtitle: 'Tuesday, September 1, 2026 · Team MuRsHiD KhAnA' },
+  settings: { title: 'Settings & access', subtitle: 'Tuesday, September 1, 2026 · Workspace Controls' },
 };
 
 export default function App() {
+  const [showWelcome, setShowWelcome] = useState(true);
   const [currentPage, setCurrentPage] = useState('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [menu, setMenu] = useState(initialMenu);
@@ -95,7 +95,7 @@ export default function App() {
 
   const handleSaveOrder = (data) => {
     const newOrderId = `#${1049 + orders.length}`;
-    setOrders([{ id: newOrderId, ...data, status: 'New', time: 'Just now', paid: false }, ...orders]);
+    setOrders([{ id: newOrderId, ...data, status: 'Preparing', time: 'Just now', paid: false }, ...orders]);
 
     // Save/Update customer history if it's a delivery
     if (data.type === 'Delivery' && data.deliveryDetails) {
@@ -176,7 +176,6 @@ export default function App() {
       case 'inventory': return <Inventory inventory={inventory} onOpenStockModal={(id) => toggleModal('stock', true, id)} />;
       case 'staff': return <Staff staff={staff} onToggleStaff={handleToggleStaff} onAddStaff={() => toggleModal('staff', true)} />;
       case 'expenses': return <Expenses expenses={expenses} onAddExpense={() => toggleModal('expense', true)} />;
-      case 'ai': return <AICenter inventory={inventory} orders={orders} menu={menu} staff={staff} />;
       case 'settings': return <Settings activeRole={activeRole} onChangeRole={setActiveRole} />;
       default: return null;
     }
@@ -186,6 +185,10 @@ export default function App() {
     setCurrentPage(page);
     setIsSidebarOpen(false);
   };
+
+  if (showWelcome) {
+    return <Welcome onEnter={() => setShowWelcome(false)} />;
+  }
 
   return (
     <div className="app">

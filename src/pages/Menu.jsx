@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { money } from '../utils';
+import CustomSelect from '../components/CustomSelect';
 
 const Menu = ({ menu, onToggleAvailability, onDeleteItem, onEditItem, onAddItem }) => {
   const [search, setSearch] = useState('');
@@ -13,12 +14,26 @@ const Menu = ({ menu, onToggleAvailability, onDeleteItem, onEditItem, onAddItem 
     return matchesSearch && matchesCategory && matchesAvailability;
   });
 
+  const categoryOptions = [
+    { value: 'all', label: 'All Categories' },
+    { value: 'Tea', label: 'Tea' },
+    { value: 'Fast Food', label: 'Fast Food' },
+    { value: 'Fries', label: 'Fries' },
+    { value: 'Drinks', label: 'Drinks' }
+  ];
+
+  const availabilityOptions = [
+    { value: 'all', label: 'All Availability' },
+    { value: 'available', label: 'Available' },
+    { value: 'unavailable', label: 'Sold Out' }
+  ];
+
   return (
     <section className="page active">
       <div className="page-head">
         <div>
           <h2>Menu management</h2>
-          <p>Keep your menu current, available, and easy to order from.</p>
+          <p>Keep the MuRsHiD KhAnA menu fresh and ready for orders.</p>
         </div>
         <div className="head-actions">
           <button className="button button-primary" onClick={onAddItem}>
@@ -31,16 +46,18 @@ const Menu = ({ menu, onToggleAvailability, onDeleteItem, onEditItem, onAddItem 
       <div className="toolbar">
         <div className="search">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="10.7" cy="10.7" r="6.7"/><path d="m16 16 5 5"/></svg>
-          <input className="input" placeholder="Search menu items..." value={search} onChange={(e) => setSearch(e.target.value)} />
+          <input className="input" placeholder="Search tea, burgers, drinks..." value={search} onChange={(e) => setSearch(e.target.value)} />
         </div>
-        <select className="input select-small" value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
-          <option value="all">All categories</option>
-          <option>Entrees</option><option>Burgers</option><option>Salads</option><option>Desserts</option><option>Beverages</option>
-        </select>
-        <select className="input select-small" value={availabilityFilter} onChange={(e) => setAvailabilityFilter(e.target.value)}>
-          <option value="all">All availability</option>
-          <option value="available">Available</option><option value="unavailable">Unavailable</option>
-        </select>
+        <CustomSelect
+          options={categoryOptions}
+          value={categoryFilter}
+          onChange={setCategoryFilter}
+        />
+        <CustomSelect
+          options={availabilityOptions}
+          value={availabilityFilter}
+          onChange={setAvailabilityFilter}
+        />
       </div>
 
       <div className="card table-wrap">
@@ -68,7 +85,7 @@ const Menu = ({ menu, onToggleAvailability, onDeleteItem, onEditItem, onAddItem 
                     </div>
                   </td>
                   <td><span className="badge info">{item.category}</span></td>
-                  <td className="text-right font-medium tabular-nums">{money(item.price)}</td>
+                  <td className="text-right font-medium tabular-nums">Rs. {item.price}</td>
                   <td className="text-center">
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
                       <button className={`toggle ${item.available ? 'on' : ''}`} onClick={() => onToggleAvailability(item.id)}></button>
@@ -94,3 +111,4 @@ const Menu = ({ menu, onToggleAvailability, onDeleteItem, onEditItem, onAddItem 
 };
 
 export default Menu;
+

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Modal from './Modal';
+import CustomSelect from './CustomSelect';
 
 const StockModal = ({ isOpen, onClose, onSave, inventory, initialItemId }) => {
   const [formData, setFormData] = useState({
@@ -27,6 +28,11 @@ const StockModal = ({ isOpen, onClose, onSave, inventory, initialItemId }) => {
     });
   };
 
+  const inventoryOptions = inventory.map(i => ({
+    value: i.id,
+    label: `${i.name} (${i.onHand} ${i.unit} on hand)`
+  }));
+
   return (
     <Modal id="stock-modal" isOpen={isOpen} onClose={onClose} title="Receive inventory stock">
       <form onSubmit={handleSubmit}>
@@ -34,15 +40,11 @@ const StockModal = ({ isOpen, onClose, onSave, inventory, initialItemId }) => {
           <div className="modal-grid">
             <div className="field span-2">
               <label>Inventory item</label>
-              <select
-                className="input"
-                value={formData.itemId}
-                onChange={(e) => setFormData({ ...formData, itemId: e.target.value })}
-              >
-                {inventory.map(i => (
-                  <option key={i.id} value={i.id}>{i.name} · {i.onHand} {i.unit} on hand</option>
-                ))}
-              </select>
+              <CustomSelect
+                options={inventoryOptions}
+                value={Number(formData.itemId)}
+                onChange={(val) => setFormData({ ...formData, itemId: val })}
+              />
             </div>
             <div className="field">
               <label>Quantity received</label>
@@ -50,8 +52,8 @@ const StockModal = ({ isOpen, onClose, onSave, inventory, initialItemId }) => {
                 className="input"
                 required
                 type="number"
-                min="0.01"
-                step="0.01"
+                min="0.1"
+                step="0.1"
                 placeholder="e.g. 10"
                 value={formData.amount}
                 onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
@@ -61,7 +63,7 @@ const StockModal = ({ isOpen, onClose, onSave, inventory, initialItemId }) => {
               <label>Received from</label>
               <input
                 className="input"
-                placeholder="e.g. Metro Foods"
+                placeholder="e.g. Local Dairy"
                 value={formData.vendor}
                 onChange={(e) => setFormData({ ...formData, vendor: e.target.value })}
               />
@@ -78,3 +80,4 @@ const StockModal = ({ isOpen, onClose, onSave, inventory, initialItemId }) => {
 };
 
 export default StockModal;
+

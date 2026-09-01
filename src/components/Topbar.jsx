@@ -21,10 +21,10 @@ const Topbar = ({ title, subtitle, onMenuClick }) => {
           </svg>
         </button>
         <div className="user">
-          <div className="avatar">JR</div>
+          <div className="avatar">AB</div>
           <div className="desktop-only">
-            <strong>Jordan Reed</strong>
-            <span>Manager</span>
+            <strong>Aslam Bhai</strong>
+            <span>Chai Master</span>
           </div>
         </div>
       </div>

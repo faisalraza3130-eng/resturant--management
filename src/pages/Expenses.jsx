@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { money } from '../utils';
+import CustomSelect from '../components/CustomSelect';
 
 const Expenses = ({ expenses, onAddExpense }) => {
   const [filter, setFilter] = useState('all');
@@ -11,12 +12,21 @@ const Expenses = ({ expenses, onAddExpense }) => {
   expenses.forEach(e => groups[e.category] = (groups[e.category] || 0) + e.amount);
   const largestCategory = Object.entries(groups).sort((a, b) => b[1] - a[1])[0]?.[0] || 'None';
 
+  const categoryOptions = [
+    { value: 'all', label: 'All Categories' },
+    { value: 'Food supplies', label: 'Food supplies' },
+    { value: 'Labor', label: 'Labor' },
+    { value: 'Utilities', label: 'Utilities' },
+    { value: 'Marketing', label: 'Marketing' },
+    { value: 'Maintenance', label: 'Maintenance' }
+  ];
+
   return (
     <section className="page active" id="expenses-page">
       <div className="page-head">
         <div>
           <h2>Expenses</h2>
-          <p>Keep operating costs visible alongside daily sales.</p>
+          <p>Keep your tea stall operating costs visible alongside daily sales.</p>
         </div>
         <div className="head-actions">
           <button className="button button-primary" onClick={onAddExpense}>
@@ -30,7 +40,7 @@ const Expenses = ({ expenses, onAddExpense }) => {
       <div className="section-grid">
         <div className="card mini-stat" style={{ borderTop: '4px solid var(--blue)' }}>
           <span className="stat-label">This month's expenses</span>
-          <strong className="stat-value" id="expense-total">{money(totalThisMonth)}</strong>
+          <strong className="stat-value" id="expense-total">Rs. {totalThisMonth}</strong>
           <small>Across all categories</small>
         </div>
         <div className="card mini-stat" style={{ borderTop: '4px solid var(--accent)' }}>
@@ -45,19 +55,12 @@ const Expenses = ({ expenses, onAddExpense }) => {
         </div>
       </div>
       <div className="toolbar">
-        <select
-          className="input select-small"
-          id="expense-filter"
+        <CustomSelect
+          options={categoryOptions}
           value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-        >
-          <option value="all">All categories</option>
-          <option>Food supplies</option>
-          <option>Labor</option>
-          <option>Utilities</option>
-          <option>Marketing</option>
-          <option>Maintenance</option>
-        </select>
+          onChange={setFilter}
+          className="select-small"
+        />
       </div>
       <div className="card table-wrap">
         <table>
@@ -79,7 +82,7 @@ const Expenses = ({ expenses, onAddExpense }) => {
                   <td><b>{e.description}</b></td>
                   <td>{e.category}</td>
                   <td className="muted">{e.vendor}</td>
-                  <td><b>{money(e.amount)}</b></td>
+                  <td><b>Rs. {e.amount}</b></td>
                   <td>
                     {e.status === 'Paid' ? (
                       <span className="badge paid">Paid</span>
@@ -104,3 +107,4 @@ const Expenses = ({ expenses, onAddExpense }) => {
 };
 
 export default Expenses;
+

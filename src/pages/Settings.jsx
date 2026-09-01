@@ -1,12 +1,19 @@
 import React from 'react';
+import CustomSelect from '../components/CustomSelect';
 
 const Settings = ({ activeRole, onChangeRole }) => {
+  const roleOptions = [
+    { value: 'Manager', label: 'Manager' },
+    { value: 'Cashier', label: 'Cashier' },
+    { value: 'Server', label: 'Server' }
+  ];
+
   return (
     <section className="page active" id="settings-page">
       <div className="page-head">
         <div>
           <h2>Settings &amp; access</h2>
-          <p>Control team access, data portability, and restaurant operations.</p>
+          <p>Control team access, data portability, and MuRsHiD KhAnA operations.</p>
         </div>
         <div className="head-actions">
           <span className="badge info">Phase 3</span>
@@ -19,15 +26,11 @@ const Settings = ({ activeRole, onChangeRole }) => {
             <p className="muted" style={{ fontSize: '12px', marginBottom: '15px' }}>Choose the active workspace role and review permissions.</p>
             <div className="field" style={{ marginBottom: '20px' }}>
               <label className="muted" style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', display: 'block', marginBottom: '5px' }}>Current workspace role</label>
-              <select
-                className="input"
+              <CustomSelect
+                options={roleOptions}
                 value={activeRole}
-                onChange={(e) => onChangeRole(e.target.value)}
-              >
-                <option>Manager</option>
-                <option>Cashier</option>
-                <option>Server</option>
-              </select>
+                onChange={onChangeRole}
+              />
             </div>
             <div style={{ display: 'grid', gap: '12px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderTop: '1px solid var(--line)' }}>
@@ -42,14 +45,6 @@ const Settings = ({ activeRole, onChangeRole }) => {
                 <div><strong>Server</strong><div className="muted" style={{ fontSize: '11px' }}>Orders and table service workflow</div></div>
                 <span style={{ color: 'var(--muted)', fontWeight: 600, fontSize: '11px' }}>Limited</span>
               </div>
-            </div>
-          </div>
-          <div className="card" style={{ padding: '20px' }}>
-            <h3 style={{ margin: '0 0 10px', fontSize: '15px' }}>Receipt printer</h3>
-            <p className="muted" style={{ fontSize: '12px', marginBottom: '15px' }}>Use your browser's print dialog to send receipts to a printer.</p>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderTop: '1px solid var(--line)' }}>
-              <div><strong>Printer connection</strong><div className="muted" style={{ fontSize: '11px' }}>Browser print ready</div></div>
-              <button className="button button-secondary" style={{ padding: '6px 12px', fontSize: '12px' }}>Test print</button>
             </div>
           </div>
         </div>
@@ -73,10 +68,6 @@ const Settings = ({ activeRole, onChangeRole }) => {
               <div><strong>Sales CSV</strong><div className="muted" style={{ fontSize: '11px' }}>Orders and totals for analysis</div></div>
               <button className="button button-secondary" style={{ padding: '6px 12px', fontSize: '12px' }}>Download CSV</button>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderTop: '1px solid var(--line)' }}>
-              <div><strong>Report printout</strong><div className="muted" style={{ fontSize: '11px' }}>Print performance summary</div></div>
-              <button className="button button-secondary" style={{ padding: '6px 12px', fontSize: '12px' }} onClick={() => window.print()}>Print report</button>
-            </div>
           </div>
         </div>
       </div>
@@ -85,3 +76,4 @@ const Settings = ({ activeRole, onChangeRole }) => {
 };
 
 export default Settings;
+

@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import Modal from './Modal';
+import CustomSelect from './CustomSelect';
 
 const MenuModal = ({ isOpen, onClose, onSave, editingItem }) => {
   const [formData, setFormData] = useState({
     name: '',
     code: '',
-    category: 'Entrees',
+    category: 'Tea',
+    brand: 'None',
     price: '',
     available: 'true',
     description: ''
@@ -17,6 +19,7 @@ const MenuModal = ({ isOpen, onClose, onSave, editingItem }) => {
         name: editingItem.name,
         code: editingItem.code || '',
         category: editingItem.category,
+        brand: editingItem.brand || 'None',
         price: editingItem.price,
         available: String(editingItem.available),
         description: editingItem.description
@@ -25,7 +28,8 @@ const MenuModal = ({ isOpen, onClose, onSave, editingItem }) => {
       setFormData({
         name: '',
         code: '',
-        category: 'Entrees',
+        category: 'Tea',
+        brand: 'None',
         price: '',
         available: 'true',
         description: ''
@@ -42,6 +46,26 @@ const MenuModal = ({ isOpen, onClose, onSave, editingItem }) => {
     });
   };
 
+  const categoryOptions = [
+    { value: 'Tea', label: 'Tea' },
+    { value: 'Fast Food', label: 'Fast Food' },
+    { value: 'Fries', label: 'Fries' },
+    { value: 'Drinks', label: 'Drinks' }
+  ];
+
+  const availabilityOptions = [
+    { value: 'true', label: 'Available' },
+    { value: 'false', label: 'Sold Out' }
+  ];
+
+  const brandOptions = [
+    { value: 'None', label: 'No Brand' },
+    { value: 'Coca Cola', label: 'Coca Cola' },
+    { value: 'Pepsi', label: 'Pepsi' },
+    { value: 'Sprite', label: 'Sprite' },
+    { value: 'Mountain Dew', label: 'Mountain Dew' }
+  ];
+
   return (
     <Modal
       id="menu-modal"
@@ -57,7 +81,7 @@ const MenuModal = ({ isOpen, onClose, onSave, editingItem }) => {
               <input
                 className="input"
                 required
-                placeholder="e.g. Harbor Burger"
+                placeholder="e.g. Doodh Patti"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               />
@@ -68,55 +92,62 @@ const MenuModal = ({ isOpen, onClose, onSave, editingItem }) => {
                 className="input"
                 required
                 maxLength="20"
-                placeholder="e.g. BUR-001"
+                placeholder="e.g. TEA-001"
                 value={formData.code}
                 onChange={(e) => setFormData({ ...formData, code: e.target.value })}
               />
             </div>
             <div className="field">
               <label>Category</label>
-              <select
-                className="input"
+              <CustomSelect
+                options={categoryOptions}
                 value={formData.category}
-                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-              >
-                <option>Entrees</option>
-                <option>Burgers</option>
-                <option>Salads</option>
-                <option>Desserts</option>
-                <option>Beverages</option>
-              </select>
+                onChange={(val) => {
+                  setFormData({
+                    ...formData,
+                    category: val,
+                    brand: val === 'Drinks' ? formData.brand : 'None'
+                  });
+                }}
+              />
             </div>
+            {formData.category === 'Drinks' && (
+              <div className="field">
+                <label>Brand</label>
+                <CustomSelect
+                  options={brandOptions}
+                  value={formData.brand}
+                  onChange={(val) => setFormData({ ...formData, brand: val })}
+                />
+              </div>
+            )}
             <div className="field">
-              <label>Price (USD)</label>
+              <label>Price (Rs.)</label>
               <input
                 className="input"
                 required
                 type="number"
                 min="0"
-                step=".01"
-                placeholder="0.00"
+                step="1"
+                placeholder="0"
                 value={formData.price}
                 onChange={(e) => setFormData({ ...formData, price: e.target.value })}
               />
             </div>
             <div className="field">
               <label>Availability</label>
-              <select
-                className="input"
+              <CustomSelect
+                options={availabilityOptions}
                 value={formData.available}
-                onChange={(e) => setFormData({ ...formData, available: e.target.value })}
-              >
-                <option value="true">Available</option>
-                <option value="false">Unavailable</option>
-              </select>
+                onChange={(val) => setFormData({ ...formData, available: val })}
+              />
             </div>
             <div className="field span-2">
               <label>Description</label>
               <textarea
                 className="input"
                 rows="3"
-                placeholder="Short description for the team"
+                placeholder="Short description (e.g. Strong tea with pure milk)"
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               ></textarea>
@@ -124,8 +155,8 @@ const MenuModal = ({ isOpen, onClose, onSave, editingItem }) => {
           </div>
         </div>
         <div className="modal-foot">
-          <button type="button" class="button button-secondary" onClick={onClose}>Cancel</button>
-          <button type="submit" class="button button-primary">Save item</button>
+          <button type="button" className="button button-secondary" onClick={onClose}>Cancel</button>
+          <button type="submit" className="button button-primary">Save item</button>
         </div>
       </form>
     </Modal>
@@ -133,3 +164,4 @@ const MenuModal = ({ isOpen, onClose, onSave, editingItem }) => {
 };
 
 export default MenuModal;
+

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { money, badge } from '../utils';
+import CustomSelect from '../components/CustomSelect';
 
 const Dashboard = ({ orders, menu, onNewOrder }) => {
   const [timeFilter, setTimeFilter] = useState('Today');
@@ -25,24 +26,27 @@ const Dashboard = ({ orders, menu, onNewOrder }) => {
 
   const stats = getStats();
 
+  const timeOptions = [
+    { value: 'Today', label: 'Today' },
+    { value: 'Yesterday', label: 'Yesterday' },
+    { value: 'This week', label: 'This week' },
+    { value: 'This month', label: 'This month' }
+  ];
+
   return (
     <section className="page active" id="dashboard-page">
       <div className="page-head">
         <div>
-          <h2>Good morning, Jordan</h2>
-          <p>Here is what is happening at Harbor & Hearth today.</p>
+          <h2>Good morning, Aslam Bhai</h2>
+          <p>Here is what is happening at MuRsHiD KhAnA today.</p>
         </div>
         <div className="head-actions">
-          <select
-            className="select-small input"
+          <CustomSelect
+            options={timeOptions}
             value={timeFilter}
-            onChange={(e) => setTimeFilter(e.target.value)}
-          >
-            <option>Today</option>
-            <option>Yesterday</option>
-            <option>This week</option>
-            <option>This month</option>
-          </select>
+            onChange={setTimeFilter}
+            className="select-small"
+          />
           <button className="button button-primary" onClick={onNewOrder}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M12 5v14M5 12h14"/>
@@ -55,7 +59,7 @@ const Dashboard = ({ orders, menu, onNewOrder }) => {
       <div className="stats">
         <div className="card stat">
           <span className="stat-label">{timeFilter}'s sales</span>
-          <strong className="stat-value">{money(stats.totalSales)}</strong>
+          <strong className="stat-value">Rs. {Math.round(stats.totalSales)}</strong>
           <span className="stat-change">↑ 12.8% from last Saturday</span>
         </div>
         <div className="card stat">
@@ -70,7 +74,7 @@ const Dashboard = ({ orders, menu, onNewOrder }) => {
         </div>
         <div className="card stat">
           <span className="stat-label">Average order value</span>
-          <strong className="stat-value">{money(stats.averageOrderValue)}</strong>
+          <strong className="stat-value">Rs. {Math.round(stats.averageOrderValue)}</strong>
           <span className="stat-change">↑ 4.1% from last Saturday</span>
         </div>
       </div>
@@ -112,7 +116,7 @@ const Dashboard = ({ orders, menu, onNewOrder }) => {
                         </div>
                       </div>
                     </td>
-                    <td data-label="Price" className="text-right font-medium tabular-nums">{money(item.price)}</td>
+                    <td data-label="Price" className="text-right font-medium tabular-nums">Rs. {item.price}</td>
                   </tr>
                 ))}
               </tbody>
@@ -154,7 +158,7 @@ const Dashboard = ({ orders, menu, onNewOrder }) => {
                       {o.items.length > 2 && <span className="muted" style={{ fontSize: '9px' }}>+{o.items.length - 2} more</span>}
                     </div>
                   </td>
-                  <td className="text-right font-medium tabular-nums">{money(orderTotal(o))}</td>
+                  <td className="text-right font-medium tabular-nums">Rs. {orderTotal(o)}</td>
                   <td className="text-center">{badge(o.status)}</td>
                   <td className="text-right muted font-mono" style={{ fontSize: '11px' }}>{o.time}</td>
                 </tr>
@@ -168,3 +172,4 @@ const Dashboard = ({ orders, menu, onNewOrder }) => {
 };
 
 export default Dashboard;
+

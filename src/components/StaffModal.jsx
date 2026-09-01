@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Modal from './Modal';
+import CustomSelect from './CustomSelect';
 
 const StaffModal = ({ isOpen, onClose, onSave }) => {
   const [formData, setFormData] = useState({
@@ -15,6 +16,20 @@ const StaffModal = ({ isOpen, onClose, onSave }) => {
     setFormData({ name: '', role: 'Server', status: 'Scheduled', shift: '' });
   };
 
+  const roleOptions = [
+    { value: 'Chai Master', label: 'Chai Master' },
+    { value: 'Chef (Fast Food)', label: 'Chef (Fast Food)' },
+    { value: 'Server', label: 'Server' },
+    { value: 'Cashier', label: 'Cashier' },
+    { value: 'Manager', label: 'Manager' }
+  ];
+
+  const statusOptions = [
+    { value: 'Scheduled', label: 'Scheduled' },
+    { value: 'Clocked in', label: 'Clocked in' },
+    { value: 'On break', label: 'On break' }
+  ];
+
   return (
     <Modal id="staff-modal" isOpen={isOpen} onClose={onClose} title="Add team member">
       <form onSubmit={handleSubmit}>
@@ -25,41 +40,32 @@ const StaffModal = ({ isOpen, onClose, onSave }) => {
               <input
                 className="input"
                 required
-                placeholder="e.g. Taylor Morgan"
+                placeholder="e.g. Aslam Bhai"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               />
             </div>
             <div className="field">
               <label>Role</label>
-              <select
-                className="input"
+              <CustomSelect
+                options={roleOptions}
                 value={formData.role}
-                onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-              >
-                <option>Server</option>
-                <option>Cashier</option>
-                <option>Line cook</option>
-                <option>Head chef</option>
-                <option>Manager</option>
-              </select>
+                onChange={(val) => setFormData({ ...formData, role: val })}
+              />
             </div>
             <div className="field">
               <label>Starting status</label>
-              <select
-                className="input"
+              <CustomSelect
+                options={statusOptions}
                 value={formData.status}
-                onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-              >
-                <option>Scheduled</option>
-                <option>Clocked in</option>
-              </select>
+                onChange={(val) => setFormData({ ...formData, status: val })}
+              />
             </div>
             <div className="field span-2">
               <label>Shift</label>
               <input
                 className="input"
-                placeholder="e.g. 4:00 PM – 10:00 PM"
+                placeholder="e.g. 8:00 AM – 4:00 PM"
                 value={formData.shift}
                 onChange={(e) => setFormData({ ...formData, shift: e.target.value })}
               />
@@ -76,3 +82,4 @@ const StaffModal = ({ isOpen, onClose, onSave }) => {
 };
 
 export default StaffModal;
+

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Modal from './Modal';
+import CustomSelect from './CustomSelect';
 
 const ExpenseModal = ({ isOpen, onClose, onSave }) => {
   const [formData, setFormData] = useState({
@@ -16,6 +17,20 @@ const ExpenseModal = ({ isOpen, onClose, onSave }) => {
     setFormData({ description: '', amount: '', category: 'Food supplies', vendor: '', status: 'Pending' });
   };
 
+  const categoryOptions = [
+    { value: 'Food supplies', label: 'Food supplies' },
+    { value: 'Labor', label: 'Labor' },
+    { value: 'Utilities', label: 'Utilities' },
+    { value: 'Marketing', label: 'Marketing' },
+    { value: 'Maintenance', label: 'Maintenance' },
+    { value: 'Other', label: 'Other' }
+  ];
+
+  const statusOptions = [
+    { value: 'Pending', label: 'Pending' },
+    { value: 'Paid', label: 'Paid' }
+  ];
+
   return (
     <Modal id="expense-modal" isOpen={isOpen} onClose={onClose} title="Record expense">
       <form onSubmit={handleSubmit}>
@@ -26,58 +41,48 @@ const ExpenseModal = ({ isOpen, onClose, onSave }) => {
               <input
                 className="input"
                 required
-                placeholder="e.g. Weekly produce delivery"
+                placeholder="e.g. Milk supply for the week"
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               />
             </div>
             <div className="field">
-              <label>Amount (USD)</label>
+              <label>Amount (Rs.)</label>
               <input
                 className="input"
                 required
                 type="number"
-                min="0.01"
-                step="0.01"
-                placeholder="0.00"
+                min="1"
+                step="1"
+                placeholder="0"
                 value={formData.amount}
                 onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
               />
             </div>
             <div className="field">
               <label>Category</label>
-              <select
-                className="input"
+              <CustomSelect
+                options={categoryOptions}
                 value={formData.category}
-                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-              >
-                <option>Food supplies</option>
-                <option>Labor</option>
-                <option>Utilities</option>
-                <option>Marketing</option>
-                <option>Maintenance</option>
-                <option>Other</option>
-              </select>
+                onChange={(val) => setFormData({ ...formData, category: val })}
+              />
             </div>
             <div className="field">
               <label>Vendor</label>
               <input
                 className="input"
-                placeholder="e.g. Metro Foods"
+                placeholder="e.g. Local Dairy"
                 value={formData.vendor}
                 onChange={(e) => setFormData({ ...formData, vendor: e.target.value })}
               />
             </div>
             <div className="field">
               <label>Status</label>
-              <select
-                className="input"
+              <CustomSelect
+                options={statusOptions}
                 value={formData.status}
-                onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-              >
-                <option>Pending</option>
-                <option>Paid</option>
-              </select>
+                onChange={(val) => setFormData({ ...formData, status: val })}
+              />
             </div>
           </div>
         </div>
@@ -91,3 +96,4 @@ const ExpenseModal = ({ isOpen, onClose, onSave }) => {
 };
 
 export default ExpenseModal;
+
