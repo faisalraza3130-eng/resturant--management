@@ -10,7 +10,7 @@ const Dashboard = ({ orders, menu, onNewOrder, onNavigate }) => {
 
   const getStats = () => {
     let salesMultiplier = 1;
-    let orderOffset = 32;
+    let orderOffset = 0;
 
     if (timeFilter === 'Yesterday') { salesMultiplier = 0.85; orderOffset = 0; }
     else if (timeFilter === 'This week') { salesMultiplier = 5.2; orderOffset = 0; }
@@ -60,22 +60,22 @@ const Dashboard = ({ orders, menu, onNewOrder, onNavigate }) => {
         <div className="card stat">
           <span className="stat-label">{timeFilter}'s sales</span>
           <strong className="stat-value">Rs. {Math.round(stats.totalSales)}</strong>
-          <span className="stat-change">↑ 12.8% from last Saturday</span>
+          <span className="stat-change">Live updates</span>
         </div>
         <div className="card stat">
           <span className="stat-label">Total orders</span>
           <strong className="stat-value">{Math.round(stats.totalOrdersCount)}</strong>
-          <span className="stat-change">↑ 8.4% from last Saturday</span>
+          <span className="stat-change">Real-time tracking</span>
         </div>
         <div className="card stat">
           <span className="stat-label">Pending orders</span>
           <strong className="stat-value">{stats.pendingOrdersCount}</strong>
-          <span className="stat-change neutral">Across all service types</span>
+          <span className="stat-change neutral">Active in kitchen</span>
         </div>
         <div className="card stat">
           <span className="stat-label">Average order value</span>
           <strong className="stat-value">Rs. {Math.round(stats.averageOrderValue)}</strong>
-          <span className="stat-change">↑ 4.1% from last Saturday</span>
+          <span className="stat-change">Based on sales</span>
         </div>
       </div>
 
