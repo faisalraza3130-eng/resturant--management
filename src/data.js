@@ -34,38 +34,14 @@ export const initialMenu = [
   {id:20,code:'FRY-003',name:'Cheese Fries',category:'Fries',price:180,available:true,description:'Fries topped with melted cheddar cheese'}
 ];
 
-export const initialOrders = [
-  {id:'#1048',date:'2026-09-01',type:'Dine-in',label:'Table 05',items:[{menuId:3,qty:2},{menuId:1,qty:1}],status:'Preparing',time:'12:42 PM',paid:false},
-  {id:'#1047',date:'2026-09-01',type:'Takeout',label:'Counter',items:[{menuId:4,qty:1},{menuId:8,qty:1}],status:'Ready',time:'12:35 PM',paid:false},
-  {id:'#1046',date:'2026-08-31',type:'Dine-in',label:'Table 02',items:[{menuId:5,qty:2}],status:'Completed',time:'12:18 PM',paid:true}
-];
-
-export const initialInventory = [
-  {id:1,name:'Tea Leaves (Tapal)',category:'Dry goods',unit:'kg',onHand:10,reorder:5,cost:1200},
-  {id:2,name:'Milk',category:'Produce',unit:'liters',onHand:50,reorder:20,cost:180},
-  {id:3,name:'Sugar',category:'Dry goods',unit:'kg',onHand:25,reorder:10,cost:140},
-  {id:4,name:'Ginger',category:'Produce',unit:'kg',onHand:2,reorder:1,cost:400},
-  {id:5,name:'Cardamom',category:'Produce',unit:'grams',onHand:500,reorder:200,cost:5000},
-  {id:6,name:'Burger Buns',category:'Bakery',unit:'pcs',onHand:60,reorder:30,cost:25},
-  {id:7,name:'Chicken Patties',category:'Proteins',unit:'pcs',onHand:40,reorder:20,cost:120}
-];
-
-export const initialCustomers = [
-  {id:1,name:'Ali Khan',phone:'0300-1234567',address:'Street 1, Area 51',email:'ali@example.com',visits:14,last:'Aug 27, 2026',spent:4500,segment:'Regular'},
-  {id:2,name:'Zeeshan Ahmed',phone:'0321-7654321',address:'Flat 4, G-9',email:'zeeshan@example.com',visits:8,last:'Aug 24, 2026',spent:2200,segment:'Returning'}
-];
-
-export const initialExpenses = [
-  {id:1,date:'Aug 28, 2026',description:'Milk supply delivery',category:'Food supplies',vendor:'Local Dairy',amount:9000,status:'Paid'},
-  {id:2,date:'Aug 27, 2026',description:'Tea stall team payroll',category:'Labor',vendor:'MuRsHiD KhAnA',amount:15000,status:'Paid'}
-];
-
+export const initialOrders = [];
+export const initialInventory = [];
+export const initialCustomers = [];
+export const initialExpenses = [];
 export const initialStaff = [
-  {id:1,name:'Aslam Bhai',role:'Chai Master',shift:'8:00 AM – 4:00 PM',hours:38,status:'Clocked in'},
-  {id:2,name:'Sajid',role:'Chef (Fast Food)',shift:'10:00 AM – 6:00 PM',hours:41,status:'Clocked in'},
-  {id:3,name:'Bilal',role:'Server',shift:'11:00 AM – 7:00 PM',hours:28,status:'Clocked in'}
+  {id:1,name:'Aslam Bhai',role:'Chai Master',shift:'8:00 AM – 4:00 PM',hours:0,status:'Scheduled'},
+  {id:2,name:'Sajid',role:'Chef (Fast Food)',shift:'10:00 AM – 6:00 PM',hours:0,status:'Scheduled'},
+  {id:3,name:'Bilal',role:'Server',shift:'11:00 AM – 7:00 PM',hours:0,status:'Scheduled'}
 ];
 
-export const initialOnlineOrders = [
-  {id:'ON-208',customer:'Avery Brooks',type:'Delivery',address:'House 12, St 4',items:[{name:'Zinger Burger',qty:2,price:280},{name:'Coca Cola - 1.5L',qty:1,price:180}],status:'New',time:'12:51 PM'}
-];
+export const initialOnlineOrders = [];

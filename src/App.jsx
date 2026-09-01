@@ -161,7 +161,7 @@ export default function App() {
       showToast(`Order ${editingOrder.id} updated.`);
     } else {
       // Create new order
-      const newOrderId = `#${1049 + orders.length}`;
+      const newOrderId = `#${String(orders.length + 1).padStart(2, '0')}`;
       const today = getISODate();
       const now = getFormattedTime();
       setOrders([{ id: newOrderId, ...data, date: today, status: 'Preparing', time: now, paid: false }, ...orders]);

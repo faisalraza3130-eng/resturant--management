@@ -12,11 +12,11 @@ const Dashboard = ({ orders, menu, onNewOrder, onNavigate }) => {
     let salesMultiplier = 1;
     let orderOffset = 32;
 
-    if (timeFilter === 'Yesterday') { salesMultiplier = 0.85; orderOffset = 28; }
-    else if (timeFilter === 'This week') { salesMultiplier = 5.2; orderOffset = 150; }
-    else if (timeFilter === 'This month') { salesMultiplier = 22.4; orderOffset = 680; }
+    if (timeFilter === 'Yesterday') { salesMultiplier = 0.85; orderOffset = 0; }
+    else if (timeFilter === 'This week') { salesMultiplier = 5.2; orderOffset = 0; }
+    else if (timeFilter === 'This month') { salesMultiplier = 22.4; orderOffset = 0; }
 
-    const totalSales = orders.filter(o => o.paid).reduce((s, o) => s + orderTotal(o), 4286.5) * salesMultiplier;
+    const totalSales = orders.filter(o => o.paid).reduce((s, o) => s + orderTotal(o), 0) * salesMultiplier;
     const totalOrdersCount = (orderOffset + orders.filter(o => o.status !== 'Cancelled').length) * (timeFilter === 'Today' ? 1 : salesMultiplier);
     const pendingOrdersCount = orders.filter(o => ['New', 'Preparing', 'Ready'].includes(o.status)).length;
     const averageOrderValue = totalSales / Math.max(1, totalOrdersCount);
