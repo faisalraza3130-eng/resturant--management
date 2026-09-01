@@ -875,10 +875,27 @@ tbody tr:hover { background: #fcfdff; }
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 320px;
+  width: 100%;
+  max-width: 320px;
   opacity: 0;
   transition: opacity 0.8s ease;
   margin-top: 20px;
+}
+
+@media (max-width: 480px) {
+  .royal-loading-wrapper {
+    max-width: 260px;
+  }
+  .welcome-screen h1 {
+    font-size: 32px;
+  }
+}
+
+/* Fix for mobile browser height issues */
+@supports (-webkit-touch-callout: none) {
+  .app, .main, .sidebar, .welcome-screen {
+    height: -webkit-fill-available;
+  }
 }
 
 .royal-loading-wrapper.active {
