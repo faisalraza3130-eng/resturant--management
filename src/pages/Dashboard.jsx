@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { money, badge } from '../utils';
 import CustomSelect from '../components/CustomSelect';
 
-const Dashboard = ({ orders, menu, onNewOrder }) => {
+const Dashboard = ({ orders, menu, onNewOrder, onNavigate }) => {
   const [timeFilter, setTimeFilter] = useState('Today');
 
   const itemById = id => menu.find(item => item.id === id);
@@ -100,7 +100,7 @@ const Dashboard = ({ orders, menu, onNewOrder }) => {
         <div className="card">
           <div className="card-title">
             <h3>Popular menu items</h3>
-            <a className="text-link">View menu</a>
+            <a className="text-link" onClick={() => onNavigate('menu')}>View menu</a>
           </div>
           <div className="table-wrap" style={{ border: 'none' }}>
           <table>
@@ -128,7 +128,7 @@ const Dashboard = ({ orders, menu, onNewOrder }) => {
       <div className="card" style={{ marginTop: '20px' }}>
         <div className="card-title">
           <h3>Recent orders</h3>
-          <a className="text-link">View all orders</a>
+          <a className="text-link" onClick={() => onNavigate('orders')}>View all orders</a>
         </div>
         <div className="table-wrap" style={{ border: 'none' }}>
           <table>
