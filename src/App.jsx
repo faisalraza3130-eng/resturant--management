@@ -19,6 +19,7 @@ import ExpenseModal from './components/ExpenseModal';
 import StockModal from './components/StockModal';
 import AlertModal from './components/AlertModal';
 import HistoryModal from './components/HistoryModal';
+import { App as CapacitorApp } from '@capacitor/app';
 
 import {
   getFormattedDate, getFormattedTime, getISODate
@@ -71,6 +72,22 @@ export default function App() {
     localStorage.setItem('mk_expenses', JSON.stringify(expenses));
     localStorage.setItem('mk_staff', JSON.stringify(staff));
   }, [menu, orders, inventory, customers, expenses, staff]);
+
+  useEffect(() => {
+    const backListener = CapacitorApp.addListener('backButton', () => {
+      if (navigationHistory.length > 0) {
+        handleBack();
+      } else {
+        if (window.confirm("Do you want to exit this app?")) {
+          CapacitorApp.exitApp();
+        }
+      }
+    });
+
+    return () => {
+      backListener.then(l => l.remove());
+    };
+  }, [navigationHistory]);
 
   const [toast, setToast] = useState({ show: false, message: '' });
   const [alert, setAlert] = useState({ show: false, title: '', message: '' });
