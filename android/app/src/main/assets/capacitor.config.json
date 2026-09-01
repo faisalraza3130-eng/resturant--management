@@ -1,0 +1,12 @@
+{
+  "appId": "com.harborhearth.app",
+  "appName": "MuRsHiD KhAnA",
+  "webDir": "dist",
+  "plugins": {
+    "LiveUpdates": {
+      "appId": "952d93a8",
+      "channel": "Production",
+      "autoUpdateMethod": "background"
+    }
+  }
+}

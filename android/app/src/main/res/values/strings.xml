@@ -4,4 +4,7 @@
     <string name="title_activity_main">MuRsHiD KhAnA</string>
     <string name="package_name">com.harborhearth.app</string>
     <string name="custom_url_scheme">com.harborhearth.app</string>
+    <string name="ionic_app_id">952d93a8</string>
+    <string name="ionic_channel_name">Production</string>
+    <string name="ionic_update_method">background</string>
 </resources>
