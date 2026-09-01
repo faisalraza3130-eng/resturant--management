@@ -269,10 +269,14 @@ tbody tr:hover { background: rgba(212, 175, 55, 0.03); }
 
 @media (min-width: 1025px) {
   .sidebar {
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
     height: 100vh;
-    align-self: flex-start;
+    z-index: 100;
+  }
+  .main {
+    margin-left: 244px;
   }
 }
 
