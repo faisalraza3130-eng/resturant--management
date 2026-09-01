@@ -52,6 +52,7 @@ export default function App() {
 
   const [showWelcome, setShowWelcome] = useState(true);
   const [currentPage, setCurrentPage] = useState('dashboard');
+  const [navigationHistory, setNavigationHistory] = useState([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const [menu, setMenu] = useState(() => getStoredData('menu', initialMenu));
@@ -263,8 +264,21 @@ export default function App() {
   };
 
   const navigate = (page) => {
-    setCurrentPage(page);
+    if (page !== currentPage) {
+      setNavigationHistory(prev => [...prev, currentPage]);
+      setCurrentPage(page);
+    }
     setIsSidebarOpen(false);
+  };
+
+  const handleBack = () => {
+    if (navigationHistory.length > 0) {
+      const prevPage = navigationHistory[navigationHistory.length - 1];
+      setNavigationHistory(prev => prev.slice(0, -1));
+      setCurrentPage(prevPage);
+    } else if (currentPage !== 'dashboard') {
+      setCurrentPage('dashboard');
+    }
   };
 
   if (showWelcome) {
@@ -276,7 +290,13 @@ export default function App() {
       <div className={`sidebar-overlay ${isSidebarOpen ? 'active' : ''}`} onClick={() => setIsSidebarOpen(false)}></div>
       <Sidebar currentPage={currentPage} onPageChange={navigate} isOpen={isSidebarOpen} />
       <main className="main">
-        <Topbar title={title} subtitle={`${todayDisplay} · ${subtitle}`} onMenuClick={() => setIsSidebarOpen(true)} />
+        <Topbar
+          title={title}
+          subtitle={`${todayDisplay} · ${subtitle}`}
+          onMenuClick={() => setIsSidebarOpen(true)}
+          showBack={navigationHistory.length > 0}
+          onBack={handleBack}
+        />
         <div className="content">
           {renderContent()}
         </div>
