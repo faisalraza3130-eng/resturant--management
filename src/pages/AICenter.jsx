@@ -109,7 +109,7 @@ const AICenter = ({ inventory, orders, menu }) => {
           <div className="table-wrap" style={{ marginTop: '15px' }}>
             <table>
               <thead>
-                <tr><th>Menu Dish</th><th>Profit Status</th><th>Popularity</th><th>Action</th></tr>
+                <tr><th>Menu Dish</th><th>Profit Status</th><th>Popularity</th><th>Edit</th></tr>
               </thead>
               <tbody>
                 {menuMatrix.slice(0, 3).map(m => (

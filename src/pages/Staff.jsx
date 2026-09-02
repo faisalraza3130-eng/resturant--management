@@ -46,7 +46,7 @@ const Staff = ({ staff, onToggleStaff, onAddStaff, onEditStaff }) => {
               <th>Shift</th>
               <th>Hours this week</th>
               <th>Status</th>
-              <th className="text-center">Action</th>
+              <th className="text-center">Edit</th>
             </tr>
           </thead>
           <tbody>

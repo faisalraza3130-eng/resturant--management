@@ -47,7 +47,7 @@ const Inventory = ({ inventory, onOpenStockModal, onEditItem }) => {
               <th>On hand</th>
               <th>Reorder at</th>
               <th>Status</th>
-              <th className="text-center">Action</th>
+              <th className="text-center">Edit</th>
             </tr>
           </thead>
           <tbody>

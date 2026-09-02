@@ -68,7 +68,7 @@ const Menu = ({ menu, onToggleAvailability, onDeleteItem, onEditItem, onAddItem 
               <th>Category</th>
               <th className="text-right">Price</th>
               <th className="text-center">Availability</th>
-              <th className="text-right">Actions</th>
+              <th className="text-right">Edit</th>
             </tr>
           </thead>
           <tbody>

@@ -90,7 +90,7 @@ const Orders = ({ orders, menu, onStatusChange, onNewOrder, onEditOrder, onOpenH
               <th>Items Ordered</th>
               <th className="text-right">Total Amount</th>
               <th className="text-center">Order Status</th>
-              <th className="text-center">Action</th>
+              <th className="text-center">Edit</th>
             </tr>
           </thead>
           <tbody>

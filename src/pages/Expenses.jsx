@@ -72,7 +72,7 @@ const Expenses = ({ expenses, onAddExpense, onEditExpense }) => {
               <th>Vendor</th>
               <th>Amount</th>
               <th>Status</th>
-              <th className="text-center">Action</th>
+              <th className="text-center">Edit</th>
             </tr>
           </thead>
           <tbody>
