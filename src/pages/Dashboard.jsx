@@ -37,7 +37,7 @@ const Dashboard = ({ orders, menu, onNewOrder, onNavigate, currentBusinessDate }
     <section className="page active" id="dashboard-page">
       <div className="page-head">
         <div>
-          <h2>Good morning, Aslam Bhai</h2>
+          <h2>Operational Dashboard</h2>
           <p>Here is what is happening at MuRsHiD KhAnA today.</p>
         </div>
         <div className="head-actions">

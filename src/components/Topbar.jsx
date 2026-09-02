@@ -29,11 +29,7 @@ const Topbar = ({ title, subtitle, onMenuClick, showBack, onBack }) => {
           </svg>
         </button>
         <div className="user">
-          <div className="avatar">AB</div>
-          <div className="desktop-only">
-            <strong>Aslam Bhai</strong>
-            <span>Chai Master</span>
-          </div>
+          <div className="avatar">MK</div>
         </div>
       </div>
     </header>
