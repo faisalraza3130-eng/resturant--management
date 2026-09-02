@@ -557,8 +557,13 @@ tbody tr:hover { background: #fcfdff; }
 .status-badge-wrap {
   display: inline-flex;
   border-radius: 20px;
-  overflow: hidden;
   border: 1px solid transparent;
+  position: relative;
+  z-index: 10; /* Added higher base z-index */
+}
+
+.status-badge-wrap:focus-within {
+  z-index: 1001; /* Lift above everything when interacting */
 }
 
 .status-badge-wrap .custom-select-container {
@@ -764,9 +769,9 @@ tbody tr:hover { background: #fcfdff; }
   background: #fff;
   border: 1px solid var(--line);
   border-radius: 12px;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2); /* Stronger shadow */
   z-index: 1000;
-  overflow: hidden;
+  overflow: visible; /* Changed from hidden */
   padding: 6px;
 }
 
