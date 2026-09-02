@@ -59,6 +59,8 @@ export default function App() {
 
   const [menu, setMenu] = useState(() => getStoredData('menu', initialMenu));
   const [orders, setOrders] = useState(() => getStoredData('orders', initialOrders));
+  const [allOrders, setAllOrders] = useState(() => getStoredData('allOrders', initialOrders));
+  const [currentBusinessDate, setCurrentBusinessDate] = useState(() => getStoredData('businessDate', getISODate()));
   const [inventory, setInventory] = useState(() => getStoredData('inventory', initialInventory));
   const [customers, setCustomers] = useState(() => getStoredData('customers', initialCustomers));
   const [expenses, setExpenses] = useState(() => getStoredData('expenses', initialExpenses));
@@ -68,11 +70,13 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem('mk_menu', JSON.stringify(menu));
     localStorage.setItem('mk_orders', JSON.stringify(orders));
+    localStorage.setItem('mk_allOrders', JSON.stringify(allOrders));
+    localStorage.setItem('mk_businessDate', JSON.stringify(currentBusinessDate));
     localStorage.setItem('mk_inventory', JSON.stringify(inventory));
     localStorage.setItem('mk_customers', JSON.stringify(customers));
     localStorage.setItem('mk_expenses', JSON.stringify(expenses));
     localStorage.setItem('mk_staff', JSON.stringify(staff));
-  }, [menu, orders, inventory, customers, expenses, staff]);
+  }, [menu, orders, allOrders, currentBusinessDate, inventory, customers, expenses, staff]);
 
   const [toast, setToast] = useState({ show: false, message: '' });
   const [alert, setAlert] = useState({ show: false, title: '', message: '' });
@@ -184,7 +188,18 @@ export default function App() {
       const newOrderId = `#${String(orders.length + 1).padStart(2, '0')}`;
       const today = getISODate();
       const now = getFormattedTime();
-      setOrders([{ id: newOrderId, ...data, date: today, status: 'Preparing', time: now, paid: false }, ...orders]);
+      const newOrder = {
+        id: newOrderId,
+        ...data,
+        date: today,
+        businessDate: currentBusinessDate,
+        status: 'Preparing',
+        time: now,
+        paid: false
+      };
+
+      setOrders([newOrder, ...orders]);
+      setAllOrders([newOrder, ...allOrders]);
       showToast(`Order ${newOrderId} created.`);
     }
 
@@ -260,7 +275,9 @@ export default function App() {
   const resetData = () => {
     if (window.confirm('Reset all application data? This will clear all orders and restore default settings.')) {
       setMenu(initialMenu);
-      setOrders(initialOrders);
+      setOrders([]);
+      setAllOrders([]);
+      setCurrentBusinessDate(getISODate());
       setInventory(initialInventory);
       setCustomers(initialCustomers);
       setExpenses(initialExpenses);
@@ -269,9 +286,27 @@ export default function App() {
     }
   };
 
+  const handleStartNewDay = () => {
+    if (window.confirm(`Start New Business Day?\n\nCurrent Shift Date: ${currentBusinessDate}\n\nThis will archive current orders and reset the dashboard.`)) {
+      // Sync any missing orders to allOrders just in case
+      const updatedAll = [...allOrders];
+      orders.forEach(o => {
+        if (!updatedAll.find(ao => ao.id === o.id && ao.date === o.date)) {
+          updatedAll.push(o);
+        }
+      });
+
+      setAllOrders(updatedAll);
+      setOrders([]); // Clear active orders
+      setExpenses([]); // Clear active expenses
+      setCurrentBusinessDate(getISODate());
+      showToast(`Shift ended. New Business Day: ${getISODate()}`);
+    }
+  };
+
   const renderContent = () => {
     switch (currentPage) {
-      case 'dashboard': return <Dashboard orders={orders} menu={menu} onNewOrder={() => toggleModal('order', true)} onNavigate={navigate} />;
+      case 'dashboard': return <Dashboard orders={orders} menu={menu} onNewOrder={() => toggleModal('order', true)} onNavigate={navigate} currentBusinessDate={currentBusinessDate} />;
       case 'menu': return <Menu menu={menu} onToggleAvailability={handleToggleAvailability} onDeleteItem={handleDeleteMenuItem} onEditItem={(item) => { setEditingMenuItem(item); toggleModal('menu', true); }} onAddItem={() => toggleModal('menu', true)} />;
       case 'orders': return <Orders orders={orders} menu={menu} onStatusChange={handleStatusChange} onNewOrder={() => toggleModal('order', true)} onEditOrder={(order) => toggleModal('order', true, order)} onOpenHistory={() => toggleModal('history', true)} />;
       case 'billing': return <Billing orders={orders} menu={menu} onMarkPaid={handleMarkPaid} />;
@@ -308,7 +343,7 @@ export default function App() {
   return (
     <div className="app">
       <div className={`sidebar-overlay ${isSidebarOpen ? 'active' : ''}`} onClick={() => setIsSidebarOpen(false)}></div>
-      <Sidebar currentPage={currentPage} onPageChange={navigate} isOpen={isSidebarOpen} />
+      <Sidebar currentPage={currentPage} onPageChange={navigate} isOpen={isSidebarOpen} onStartNewDay={handleStartNewDay} />
       <main className="main">
         <Topbar
           title={title}
@@ -328,7 +363,7 @@ export default function App() {
       <StaffModal isOpen={modals.staff} onClose={() => toggleModal('staff', false)} onSave={handleSaveStaff} />
       <ExpenseModal isOpen={modals.expense} onClose={() => toggleModal('expense', false)} onSave={handleSaveExpense} />
       <StockModal isOpen={modals.stock} onClose={() => toggleModal('stock', false)} onSave={handleSaveStock} inventory={inventory} initialItemId={stockInitialItemId} />
-      <HistoryModal isOpen={modals.history} onClose={() => toggleModal('history', false)} orders={orders} menu={menu} />
+      <HistoryModal isOpen={modals.history} onClose={() => toggleModal('history', false)} orders={allOrders} menu={menu} />
       <AlertModal
         isOpen={alert.show}
         onClose={() => setAlert({ ...alert, show: false })}

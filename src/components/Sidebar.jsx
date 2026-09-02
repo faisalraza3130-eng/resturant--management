@@ -1,7 +1,7 @@
 import React from 'react';
 import Logo from './Logo';
 
-const Sidebar = ({ currentPage, onPageChange, isOpen }) => {
+const Sidebar = ({ currentPage, onPageChange, isOpen, onStartNewDay }) => {
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg>
@@ -46,6 +46,31 @@ const Sidebar = ({ currentPage, onPageChange, isOpen }) => {
             <span>{item.label}</span>
           </button>
         ))}
+
+        <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', marginTop: '10px', paddingTop: '10px' }}>
+          <button
+            className="mini-button"
+            style={{
+              background: 'rgba(212, 175, 55, 0.1)',
+              color: '#D4AF37',
+              borderColor: '#D4AF37',
+              width: 'calc(100% - 24px)',
+              margin: '0 12px',
+              padding: '12px',
+              height: 'auto',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '4px'
+            }}
+            onClick={onStartNewDay}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '18px' }}>
+              <path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z" />
+            </svg>
+            <span style={{ fontSize: '10px', fontWeight: 'bold', textTransform: 'uppercase' }}>Start New Day</span>
+          </button>
+        </div>
       </nav>
       <div className="sidebar-bottom">
         <span className="status-dot"></span>Demo workspace<br/>

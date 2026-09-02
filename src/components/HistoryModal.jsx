@@ -4,11 +4,14 @@ import { money, getISODate } from '../utils';
 
 const HistoryModal = ({ isOpen, onClose, orders, menu }) => {
   const [selectedDate, setSelectedDate] = useState(getISODate());
+  const [filterType, setFilterType] = useState('business'); // 'business' or 'actual'
 
   const itemById = id => menu.find(item => item.id === id);
   const orderTotal = order => order.items.reduce((sum, line) => sum + (itemById(line.menuId)?.price || 0) * line.qty, 0);
 
-  const dailyOrders = orders.filter(o => o.date === selectedDate);
+  const dailyOrders = orders.filter(o =>
+    filterType === 'business' ? o.businessDate === selectedDate : o.date === selectedDate
+  );
   const totalSales = dailyOrders.reduce((sum, o) => sum + orderTotal(o), 0);
   const totalCount = dailyOrders.length;
   const aov = totalCount > 0 ? totalSales / totalCount : 0;
@@ -24,14 +27,24 @@ const HistoryModal = ({ isOpen, onClose, orders, menu }) => {
       <div className="modal-body" style={{ overflowY: 'auto' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '25px', background: '#f8fafc', padding: '15px', borderRadius: '12px', flexWrap: 'wrap', gap: '15px' }}>
           <div className="field" style={{ margin: 0, flex: '1 1 200px' }}>
-            <label style={{ fontSize: '12px', fontWeight: 'bold', color: 'var(--navy)' }}>Select Date</label>
-            <input
-              type="date"
-              className="input"
-              value={selectedDate}
-              onChange={(e) => setSelectedDate(e.target.value)}
-              style={{ padding: '8px' }}
-            />
+            <label style={{ fontSize: '12px', fontWeight: 'bold', color: 'var(--navy)' }}>Filter by {filterType === 'business' ? 'Business Shift' : 'Calendar Date'}</label>
+            <div style={{ display: 'flex', gap: '5px' }}>
+              <input
+                type="date"
+                className="input"
+                value={selectedDate}
+                onChange={(e) => setSelectedDate(e.target.value)}
+                style={{ padding: '8px' }}
+              />
+              <button
+                className="mini-button"
+                type="button"
+                onClick={() => setFilterType(prev => prev === 'business' ? 'actual' : 'business')}
+                style={{ whiteSpace: 'nowrap', fontSize: '10px', padding: '0 10px' }}
+              >
+                Switch to {filterType === 'business' ? 'Calendar' : 'Business'}
+              </button>
+            </div>
           </div>
 
           <div style={{ display: 'flex', gap: '10px', flex: '1 1 300px', justifyContent: 'flex-end', flexWrap: 'wrap' }}>
@@ -55,7 +68,8 @@ const HistoryModal = ({ isOpen, onClose, orders, menu }) => {
             <thead>
               <tr>
                 <th>ID</th>
-                <th>Time</th>
+                <th>Time / Date</th>
+                <th>Shift Date</th>
                 <th>Type</th>
                 <th>Table/Cust</th>
                 <th>Items</th>
@@ -68,7 +82,11 @@ const HistoryModal = ({ isOpen, onClose, orders, menu }) => {
                 dailyOrders.map(o => (
                   <tr key={o.id}>
                     <td className="font-mono">{o.id}</td>
-                    <td className="muted">{o.time}</td>
+                    <td className="muted">
+                      <div>{o.time}</div>
+                      <div style={{ fontSize: '10px' }}>{o.date}</div>
+                    </td>
+                    <td className="font-medium" style={{ color: 'var(--accent)' }}>{o.businessDate}</td>
                     <td><span className="badge info" style={{ fontSize: '10px' }}>{o.type}</span></td>
                     <td>{o.label}</td>
                     <td>

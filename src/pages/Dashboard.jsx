@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { money, badge } from '../utils';
 import CustomSelect from '../components/CustomSelect';
 
-const Dashboard = ({ orders, menu, onNewOrder, onNavigate }) => {
+const Dashboard = ({ orders, menu, onNewOrder, onNavigate, currentBusinessDate }) => {
   const [timeFilter, setTimeFilter] = useState('Today');
 
   const itemById = id => menu.find(item => item.id === id);
@@ -16,9 +16,9 @@ const Dashboard = ({ orders, menu, onNewOrder, onNavigate }) => {
     else if (timeFilter === 'This week') { salesMultiplier = 5.2; orderOffset = 0; }
     else if (timeFilter === 'This month') { salesMultiplier = 22.4; orderOffset = 0; }
 
-    const totalSales = orders.filter(o => o.paid).reduce((s, o) => s + orderTotal(o), 0) * salesMultiplier;
-    const totalOrdersCount = (orderOffset + orders.filter(o => o.status !== 'Cancelled').length) * (timeFilter === 'Today' ? 1 : salesMultiplier);
-    const pendingOrdersCount = orders.filter(o => ['New', 'Preparing', 'Ready'].includes(o.status)).length;
+    const totalSales = orders.filter(o => o.paid && o.businessDate === currentBusinessDate).reduce((s, o) => s + orderTotal(o), 0) * salesMultiplier;
+    const totalOrdersCount = (orderOffset + orders.filter(o => o.status !== 'Cancelled' && o.businessDate === currentBusinessDate).length) * (timeFilter === 'Today' ? 1 : salesMultiplier);
+    const pendingOrdersCount = orders.filter(o => ['New', 'Preparing', 'Ready'].includes(o.status) && o.businessDate === currentBusinessDate).length;
     const averageOrderValue = totalSales / Math.max(1, totalOrdersCount);
 
     return { totalSales, totalOrdersCount, pendingOrdersCount, averageOrderValue };
