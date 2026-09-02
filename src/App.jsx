@@ -81,6 +81,7 @@ export default function App() {
   const [toast, setToast] = useState({ show: false, message: '' });
   const [alert, setAlert] = useState({ show: false, title: '', message: '' });
   const [showExitModal, setShowExitModal] = useState(false);
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
 
   useEffect(() => {
     const backListener = CapacitorApp.addListener('backButton', ({ canGoBack }) => {
@@ -287,21 +288,24 @@ export default function App() {
   };
 
   const handleStartNewDay = () => {
-    if (window.confirm(`Start New Business Day?\n\nCurrent Shift Date: ${currentBusinessDate}\n\nThis will archive current orders and reset the dashboard.`)) {
-      // Sync any missing orders to allOrders just in case
-      const updatedAll = [...allOrders];
-      orders.forEach(o => {
-        if (!updatedAll.find(ao => ao.id === o.id && ao.date === o.date)) {
-          updatedAll.push(o);
-        }
-      });
+    setShowResetConfirm(true);
+  };
 
-      setAllOrders(updatedAll);
-      setOrders([]); // Clear active orders
-      setExpenses([]); // Clear active expenses
-      setCurrentBusinessDate(getISODate());
-      showToast(`Shift ended. New Business Day: ${getISODate()}`);
-    }
+  const executeStartNewDay = () => {
+    // Sync any missing orders to allOrders just in case
+    const updatedAll = [...allOrders];
+    orders.forEach(o => {
+      if (!updatedAll.find(ao => ao.id === o.id && ao.date === o.date)) {
+        updatedAll.push(o);
+      }
+    });
+
+    setAllOrders(updatedAll);
+    setOrders([]); // Clear active orders
+    setExpenses([]); // Clear active expenses
+    setCurrentBusinessDate(getISODate());
+    setShowResetConfirm(false);
+    showToast(`Shift ended. New Business Day: ${getISODate()}`);
   };
 
   const renderContent = () => {
@@ -376,6 +380,13 @@ export default function App() {
         onConfirm={() => CapacitorApp.exitApp()}
         title="Exit App"
         message="Do you want to exit this app?"
+      />
+      <ConfirmationModal
+        isOpen={showResetConfirm}
+        onClose={() => setShowResetConfirm(false)}
+        onConfirm={executeStartNewDay}
+        title="End Current Shift?"
+        message={`This will archive all orders for ${currentBusinessDate} and reset your dashboard. This action cannot be undone.`}
       />
     </div>
   );
