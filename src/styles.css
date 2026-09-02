@@ -245,6 +245,7 @@ table {
   border-collapse: collapse;
   min-width: 600px;
   color: var(--ink);
+  margin-bottom: 120px; /* Added gap at the bottom for dropdowns */
 }
 
 th, td {
@@ -763,16 +764,16 @@ tbody tr:focus-within { z-index: 1001; }
   position: absolute;
   top: calc(100% + 6px);
   left: 0;
-  min-width: 150px; /* Forced minimum width */
+  min-width: 170px; /* Increased width to prevent clipping */
   background: #ffffff !important;
   border: 1px solid var(--line);
   border-radius: 12px;
   box-shadow: 0 15px 45px rgba(0, 0, 0, 0.25);
-  z-index: 9999 !important; /* Absolute top layer */
+  z-index: 9999 !important;
   overflow-y: auto;
-  max-height: 180px; /* Compact height for 4-5 items */
+  max-height: 250px; /* Increased height to show more content */
   overscroll-behavior: contain;
-  padding: 6px;
+  padding: 8px;
 }
 
 /* Custom internal scrollbar for dropdown */
@@ -788,10 +789,11 @@ tbody tr:focus-within { z-index: 1001; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 12px;
+  padding: 10px 14px;
   border-radius: 8px;
   cursor: pointer;
   transition: background 0.15s ease;
+  white-space: nowrap; /* Prevents text from being lost in wrap */
 }
 
 .select-option:hover {
