@@ -12,8 +12,11 @@ const HistoryModal = ({ isOpen, onClose, orders, menu }) => {
   const dailyOrders = orders.filter(o =>
     filterType === 'business' ? o.businessDate === selectedDate : o.date === selectedDate
   );
-  const totalSales = dailyOrders.reduce((sum, o) => sum + orderTotal(o), 0);
-  const totalCount = dailyOrders.length;
+
+  // Analytics should exclude Cancelled orders
+  const validOrders = dailyOrders.filter(o => o.status !== 'Cancelled');
+  const totalSales = validOrders.reduce((sum, o) => sum + orderTotal(o), 0);
+  const totalCount = validOrders.length;
   const aov = totalCount > 0 ? totalSales / totalCount : 0;
 
   return (
