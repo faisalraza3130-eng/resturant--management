@@ -31,7 +31,11 @@ const CustomSelect = ({ options, value, onChange, placeholder = "Select option",
       </div>
 
       {isOpen && (
-        <div className="select-dropdown">
+        <div
+          className="select-dropdown"
+          onWheel={(e) => e.stopPropagation()}
+          onTouchMove={(e) => e.stopPropagation()}
+        >
           {options.map((option) => (
             <div
               key={option.value}

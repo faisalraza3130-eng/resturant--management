@@ -771,7 +771,9 @@ tbody tr:hover { background: #fcfdff; }
   border-radius: 12px;
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2); /* Stronger shadow */
   z-index: 1000;
-  overflow: visible; /* Changed from hidden */
+  overflow-y: auto; /* Changed from visible */
+  max-height: 220px; /* Added max height */
+  overscroll-behavior: contain; /* Prevents parent scroll */
   padding: 6px;
 }
 
