@@ -245,7 +245,7 @@ table {
   border-collapse: collapse;
   min-width: 600px;
   color: var(--ink);
-  margin-bottom: 120px; /* Added gap at the bottom for dropdowns */
+  margin-bottom: 150px; /* Extra large gap to ensure dropdowns are never cut off */
 }
 
 th, td {
