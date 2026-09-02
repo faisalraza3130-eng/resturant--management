@@ -548,9 +548,50 @@ tbody tr:hover { background: #fcfdff; }
   border-color: rgba(57, 120, 189, 0.2);
 }
 .badge.cancelled {
-  color: #c45252;
-  background: rgba(196, 82, 82, 0.1);
-  border-color: rgba(196, 82, 82, 0.2);
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+/* Status Select Badge Style */
+.status-badge-wrap {
+  display: inline-flex;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid transparent;
+}
+
+.status-badge-wrap .custom-select-container {
+  min-width: 110px;
+}
+
+.status-badge-wrap .select-trigger {
+  border: none;
+  background: transparent;
+  padding: 4px 10px;
+  min-height: 28px;
+  height: 28px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.status-badge-wrap.preparing { background: rgba(57, 120, 189, 0.1); color: #3978bd; border-color: rgba(57, 120, 189, 0.2); }
+.status-badge-wrap.ready { background: rgba(67, 200, 149, 0.1); color: #43c895; border-color: rgba(67, 200, 149, 0.2); }
+.status-badge-wrap.completed { background: rgba(67, 200, 149, 0.1); color: #43c895; border-color: rgba(67, 200, 149, 0.2); }
+.status-badge-wrap.cancelled { background: rgba(239, 68, 68, 0.1); color: #ef4444; border-color: rgba(239, 68, 68, 0.2); }
+.status-badge-wrap.new { background: rgba(57, 120, 189, 0.1); color: #3978bd; border-color: rgba(57, 120, 189, 0.2); }
+
+.status-badge-wrap .select-trigger .trigger-content {
+  color: inherit;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.status-badge-wrap .select-trigger .chevron {
+  width: 12px;
+  height: 12px;
+  color: inherit;
 }
 .badge.info {
   color: #D4AF37;

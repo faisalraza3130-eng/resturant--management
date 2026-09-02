@@ -115,12 +115,14 @@ const Orders = ({ orders, menu, onStatusChange, onNewOrder, onEditOrder, onOpenH
                   </td>
                   <td className="text-right font-medium tabular-nums">Rs. {orderTotal(o)}</td>
                   <td className="text-center">
-                    <CustomSelect
-                      options={inlineStatusOptions}
-                      value={o.status}
-                      onChange={(val) => onStatusChange(o.id, val)}
-                      className="select-small"
-                    />
+                    <div className={`status-badge-wrap ${o.status.toLowerCase()}`}>
+                      <CustomSelect
+                        options={inlineStatusOptions}
+                        value={o.status}
+                        onChange={(val) => onStatusChange(o.id, val)}
+                        className="select-small"
+                      />
+                    </div>
                   </td>
                   <td className="text-center">
                     <button
