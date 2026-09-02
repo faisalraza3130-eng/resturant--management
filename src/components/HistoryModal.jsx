@@ -66,7 +66,7 @@ const HistoryModal = ({ isOpen, onClose, orders, menu }) => {
           </div>
         </div>
 
-        <div className="card table-wrap" style={{ margin: 0 }}>
+        <div className="card table-wrap scrollable-table" style={{ margin: 0 }}>
           <table style={{ fontSize: '13px' }}>
             <thead>
               <tr>

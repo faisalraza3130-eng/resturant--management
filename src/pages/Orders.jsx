@@ -79,7 +79,7 @@ const Orders = ({ orders, menu, onStatusChange, onNewOrder, onEditOrder, onOpenH
         />
       </div>
 
-      <div className="card table-wrap">
+      <div className="card table-wrap scrollable-table">
         <table>
           <thead>
             <tr>
