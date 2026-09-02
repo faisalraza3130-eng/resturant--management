@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Modal from './Modal';
 import CustomSelect from './CustomSelect';
 
-const ExpenseModal = ({ isOpen, onClose, onSave }) => {
+const ExpenseModal = ({ isOpen, onClose, onSave, editingItem }) => {
   const [formData, setFormData] = useState({
     description: '',
     amount: '',
@@ -11,10 +11,25 @@ const ExpenseModal = ({ isOpen, onClose, onSave }) => {
     status: 'Pending'
   });
 
+  React.useEffect(() => {
+    if (isOpen) {
+      if (editingItem) {
+        setFormData({
+          description: editingItem.description,
+          amount: editingItem.amount,
+          category: editingItem.category,
+          vendor: editingItem.vendor,
+          status: editingItem.status
+        });
+      } else {
+        setFormData({ description: '', amount: '', category: 'Food supplies', vendor: '', status: 'Pending' });
+      }
+    }
+  }, [isOpen, editingItem]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     onSave({ ...formData, amount: Number(formData.amount) });
-    setFormData({ description: '', amount: '', category: 'Food supplies', vendor: '', status: 'Pending' });
   };
 
   const categoryOptions = [
@@ -32,7 +47,7 @@ const ExpenseModal = ({ isOpen, onClose, onSave }) => {
   ];
 
   return (
-    <Modal id="expense-modal" isOpen={isOpen} onClose={onClose} title="Record expense">
+    <Modal id="expense-modal" isOpen={isOpen} onClose={onClose} title={editingItem ? "Edit expense" : "Record expense"}>
       <form onSubmit={handleSubmit}>
         <div className="modal-body">
           <div className="modal-grid">
@@ -88,7 +103,9 @@ const ExpenseModal = ({ isOpen, onClose, onSave }) => {
         </div>
         <div className="modal-foot">
           <button type="button" className="button button-secondary" onClick={onClose}>Cancel</button>
-          <button type="submit" className="button button-primary">Record expense</button>
+          <button type="submit" className="button button-primary">
+            {editingItem ? "Update expense" : "Record expense"}
+          </button>
         </div>
       </form>
     </Modal>

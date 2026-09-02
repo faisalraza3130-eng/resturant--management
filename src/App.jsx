@@ -119,6 +119,9 @@ export default function App() {
   });
   const [editingMenuItem, setEditingMenuItem] = useState(null);
   const [editingOrder, setEditingOrder] = useState(null);
+  const [editingStaffItem, setEditingStaffItem] = useState(null);
+  const [editingExpenseItem, setEditingExpenseItem] = useState(null);
+  const [editingInventoryItem, setEditingInventoryItem] = useState(null);
   const [stockInitialItemId, setStockInitialItemId] = useState(null);
 
   const showToast = (message) => {
@@ -133,7 +136,24 @@ export default function App() {
       if (!isOpen) setEditingOrder(null);
       else if (data) setEditingOrder(data);
     }
-    if (modal === 'stock' && isOpen) setStockInitialItemId(data);
+    if (modal === 'staff') {
+      if (!isOpen) setEditingStaffItem(null);
+      else if (data) setEditingStaffItem(data);
+    }
+    if (modal === 'expense') {
+      if (!isOpen) setEditingExpenseItem(null);
+      else if (data) setEditingExpenseItem(data);
+    }
+    if (modal === 'stock') {
+      if (!isOpen) {
+        setStockInitialItemId(null);
+        setEditingInventoryItem(null);
+      } else if (data) {
+        // If data is an object, it's an edit. If it's a number, it's "Add Stock"
+        if (typeof data === 'object') setEditingInventoryItem(data);
+        else setStockInitialItemId(data);
+      }
+    }
   };
 
   const todayDisplay = getFormattedDate();
@@ -254,9 +274,14 @@ export default function App() {
   };
 
   const handleSaveStaff = (data) => {
-    setStaff([...staff, { id: Date.now(), ...data, hours: 0 }]);
+    if (editingStaffItem) {
+      setStaff(staff.map(s => s.id === editingStaffItem.id ? { ...s, ...data } : s));
+      showToast('Staff updated.');
+    } else {
+      setStaff([...staff, { id: Date.now(), ...data, hours: 0 }]);
+      showToast('Staff added.');
+    }
     toggleModal('staff', false);
-    showToast('Staff added.');
   };
 
   const handleToggleStaff = (id) => {
@@ -265,15 +290,25 @@ export default function App() {
   };
 
   const handleSaveExpense = (data) => {
-    setExpenses([{ id: Date.now(), date: 'Aug 29, 2026', ...data }, ...expenses]);
+    if (editingExpenseItem) {
+      setExpenses(expenses.map(e => e.id === editingExpenseItem.id ? { ...e, ...data } : e));
+      showToast('Expense updated.');
+    } else {
+      setExpenses([{ id: Date.now(), date: getISODate(), ...data }, ...expenses]);
+      showToast('Expense recorded.');
+    }
     toggleModal('expense', false);
-    showToast('Expense recorded.');
   };
 
   const handleSaveStock = (data) => {
-    setInventory(inventory.map(i => i.id === data.itemId ? { ...i, onHand: i.onHand + data.amount } : i));
+    if (editingInventoryItem) {
+      setInventory(inventory.map(i => i.id === editingInventoryItem.id ? { ...i, ...data } : i));
+      showToast('Inventory item updated.');
+    } else {
+      setInventory(inventory.map(i => i.id === data.itemId ? { ...i, onHand: i.onHand + data.amount } : i));
+      showToast('Stock level updated.');
+    }
     toggleModal('stock', false);
-    showToast('Inventory updated.');
   };
 
   const resetData = () => {
@@ -317,9 +352,9 @@ export default function App() {
       case 'menu': return <Menu menu={menu} onToggleAvailability={handleToggleAvailability} onDeleteItem={handleDeleteMenuItem} onEditItem={(item) => { setEditingMenuItem(item); toggleModal('menu', true); }} onAddItem={() => toggleModal('menu', true)} />;
       case 'orders': return <Orders orders={orders} menu={menu} onStatusChange={handleStatusChange} onNewOrder={() => toggleModal('order', true)} onEditOrder={(order) => toggleModal('order', true, order)} onOpenHistory={() => toggleModal('history', true)} />;
       case 'billing': return <Billing orders={orders} menu={menu} onMarkPaid={handleMarkPaid} />;
-      case 'inventory': return <Inventory inventory={inventory} onOpenStockModal={(id) => toggleModal('stock', true, id)} />;
-      case 'staff': return <Staff staff={staff} onToggleStaff={handleToggleStaff} onAddStaff={() => toggleModal('staff', true)} />;
-      case 'expenses': return <Expenses expenses={expenses} onAddExpense={() => toggleModal('expense', true)} />;
+      case 'inventory': return <Inventory inventory={inventory} onOpenStockModal={(id) => toggleModal('stock', true, id)} onEditItem={(item) => toggleModal('stock', true, item)} />;
+      case 'staff': return <Staff staff={staff} onToggleStaff={handleToggleStaff} onAddStaff={() => toggleModal('staff', true)} onEditStaff={(item) => toggleModal('staff', true, item)} />;
+      case 'expenses': return <Expenses expenses={expenses} onAddExpense={() => toggleModal('expense', true)} onEditExpense={(item) => toggleModal('expense', true, item)} />;
       case 'settings': return <Settings activeRole={activeRole} onChangeRole={setActiveRole} onResetData={resetData} />;
       default: return null;
     }
@@ -367,9 +402,9 @@ export default function App() {
 
       <MenuModal isOpen={modals.menu} onClose={() => toggleModal('menu', false)} onSave={handleSaveMenuItem} editingItem={editingMenuItem} />
       <OrderModal isOpen={modals.order} onClose={() => toggleModal('order', false)} onSave={handleSaveOrder} menu={menu} customers={customers} editingOrder={editingOrder} />
-      <StaffModal isOpen={modals.staff} onClose={() => toggleModal('staff', false)} onSave={handleSaveStaff} />
-      <ExpenseModal isOpen={modals.expense} onClose={() => toggleModal('expense', false)} onSave={handleSaveExpense} />
-      <StockModal isOpen={modals.stock} onClose={() => toggleModal('stock', false)} onSave={handleSaveStock} inventory={inventory} initialItemId={stockInitialItemId} />
+      <StaffModal isOpen={modals.staff} onClose={() => toggleModal('staff', false)} onSave={handleSaveStaff} editingItem={editingStaffItem} />
+      <ExpenseModal isOpen={modals.expense} onClose={() => toggleModal('expense', false)} onSave={handleSaveExpense} editingItem={editingExpenseItem} />
+      <StockModal isOpen={modals.stock} onClose={() => toggleModal('stock', false)} onSave={handleSaveStock} inventory={inventory} initialItemId={stockInitialItemId} editingItem={editingInventoryItem} />
       <HistoryModal isOpen={modals.history} onClose={() => toggleModal('history', false)} orders={allOrders} menu={menu} />
       <AlertModal
         isOpen={alert.show}

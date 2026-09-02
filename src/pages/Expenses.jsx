@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { money } from '../utils';
 import CustomSelect from '../components/CustomSelect';
 
-const Expenses = ({ expenses, onAddExpense }) => {
+const Expenses = ({ expenses, onAddExpense, onEditExpense }) => {
   const [filter, setFilter] = useState('all');
 
   const filteredExpenses = expenses.filter(e => filter === 'all' || e.category === filter);
@@ -62,7 +62,7 @@ const Expenses = ({ expenses, onAddExpense }) => {
           className="select-small"
         />
       </div>
-      <div className="card table-wrap">
+      <div className="card table-wrap scrollable-table">
         <table>
           <thead>
             <tr>
@@ -72,6 +72,7 @@ const Expenses = ({ expenses, onAddExpense }) => {
               <th>Vendor</th>
               <th>Amount</th>
               <th>Status</th>
+              <th className="text-center">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -85,16 +86,23 @@ const Expenses = ({ expenses, onAddExpense }) => {
                   <td><b>Rs. {e.amount}</b></td>
                   <td>
                     {e.status === 'Paid' ? (
-                      <span className="badge paid">Paid</span>
+                      <span className="badge ready">Paid</span>
                     ) : (
                       <span className="badge preparing">Pending</span>
                     )}
+                  </td>
+                  <td className="text-center">
+                    <button className="mini-button" onClick={() => onEditExpense(e)}>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '12px', height: '12px' }}>
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                      </svg>
+                    </button>
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="6">
+                <td colSpan="7">
                   <div className="empty">No expenses in this category.</div>
                 </td>
               </tr>

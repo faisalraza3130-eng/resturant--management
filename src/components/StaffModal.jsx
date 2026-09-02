@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Modal from './Modal';
 import CustomSelect from './CustomSelect';
 
-const StaffModal = ({ isOpen, onClose, onSave }) => {
+const StaffModal = ({ isOpen, onClose, onSave, editingItem }) => {
   const [formData, setFormData] = useState({
     name: '',
     role: 'Server',
@@ -10,10 +10,24 @@ const StaffModal = ({ isOpen, onClose, onSave }) => {
     shift: ''
   });
 
+  React.useEffect(() => {
+    if (isOpen) {
+      if (editingItem) {
+        setFormData({
+          name: editingItem.name,
+          role: editingItem.role,
+          status: editingItem.status,
+          shift: editingItem.shift
+        });
+      } else {
+        setFormData({ name: '', role: 'Server', status: 'Scheduled', shift: '' });
+      }
+    }
+  }, [isOpen, editingItem]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     onSave(formData);
-    setFormData({ name: '', role: 'Server', status: 'Scheduled', shift: '' });
   };
 
   const roleOptions = [
@@ -31,7 +45,7 @@ const StaffModal = ({ isOpen, onClose, onSave }) => {
   ];
 
   return (
-    <Modal id="staff-modal" isOpen={isOpen} onClose={onClose} title="Add team member">
+    <Modal id="staff-modal" isOpen={isOpen} onClose={onClose} title={editingItem ? "Edit team member" : "Add team member"}>
       <form onSubmit={handleSubmit}>
         <div className="modal-body">
           <div className="modal-grid">
@@ -54,7 +68,7 @@ const StaffModal = ({ isOpen, onClose, onSave }) => {
               />
             </div>
             <div className="field">
-              <label>Starting status</label>
+              <label>Status</label>
               <CustomSelect
                 options={statusOptions}
                 value={formData.status}
@@ -74,7 +88,9 @@ const StaffModal = ({ isOpen, onClose, onSave }) => {
         </div>
         <div className="modal-foot">
           <button type="button" className="button button-secondary" onClick={onClose}>Cancel</button>
-          <button type="submit" className="button button-primary">Add team member</button>
+          <button type="submit" className="button button-primary">
+            {editingItem ? "Update member" : "Add team member"}
+          </button>
         </div>
       </form>
     </Modal>

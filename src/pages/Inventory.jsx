@@ -1,7 +1,7 @@
 import React from 'react';
 import { money } from '../utils';
 
-const Inventory = ({ inventory, onOpenStockModal }) => {
+const Inventory = ({ inventory, onOpenStockModal, onEditItem }) => {
   const lowStock = inventory.filter(i => i.onHand <= i.reorder);
   const inventoryValue = inventory.reduce((s, i) => s + i.onHand * i.cost, 0);
 
@@ -38,7 +38,7 @@ const Inventory = ({ inventory, onOpenStockModal }) => {
           <small>Estimated current value</small>
         </div>
       </div>
-      <div className="card table-wrap">
+      <div className="card table-wrap scrollable-table">
         <table>
           <thead>
             <tr>
@@ -47,7 +47,7 @@ const Inventory = ({ inventory, onOpenStockModal }) => {
               <th>On hand</th>
               <th>Reorder at</th>
               <th>Status</th>
-              <th>Action</th>
+              <th className="text-center">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -66,10 +66,17 @@ const Inventory = ({ inventory, onOpenStockModal }) => {
                       <span className="badge completed">Healthy</span>
                     )}
                   </td>
-                  <td>
-                    <button className="mini-button" onClick={() => onOpenStockModal(i.id)}>
-                      Add stock
-                    </button>
+                  <td className="text-center">
+                    <div style={{ display: 'flex', gap: '5px', justifyContent: 'center' }}>
+                      <button className="mini-button" onClick={() => onOpenStockModal(i.id)} title="Add Stock">
+                        Add
+                      </button>
+                      <button className="mini-button" onClick={() => onEditItem(i)} title="Edit Item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '12px', height: '12px' }}>
+                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                        </svg>
+                      </button>
+                    </div>
                   </td>
                 </tr>
               );
