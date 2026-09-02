@@ -34,22 +34,11 @@ const Sidebar = ({ currentPage, onPageChange, isOpen, onStartNewDay }) => {
       <div className="brand" style={{ padding: '10px 10px 32px' }}>
         <Logo size={32} />
       </div>
-      <div className="nav-label">Workspace</div>
-      <nav className="nav">
-        {navItems.map(item => (
-          <button
-            key={item.id}
-            className={currentPage === item.id ? 'active' : ''}
-            onClick={() => onPageChange(item.id)}
-          >
-            {item.icon}
-            <span>{item.label}</span>
-          </button>
-        ))}
 
-        <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', marginTop: '10px', paddingTop: '10px' }}>
+      <div style={{ paddingBottom: '15px', marginBottom: '15px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
           <button
             className="mini-button"
+            type="button"
             style={{
               background: 'rgba(212, 175, 55, 0.1)',
               color: '#D4AF37',
@@ -70,7 +59,20 @@ const Sidebar = ({ currentPage, onPageChange, isOpen, onStartNewDay }) => {
             </svg>
             <span style={{ fontSize: '10px', fontWeight: 'bold', textTransform: 'uppercase' }}>Start New Day</span>
           </button>
-        </div>
+      </div>
+
+      <div className="nav-label">Workspace</div>
+      <nav className="nav">
+        {navItems.map(item => (
+          <button
+            key={item.id}
+            className={currentPage === item.id ? 'active' : ''}
+            onClick={() => onPageChange(item.id)}
+          >
+            {item.icon}
+            <span>{item.label}</span>
+          </button>
+        ))}
       </nav>
       <div className="sidebar-bottom">
         <span className="status-dot"></span>Demo workspace<br/>
