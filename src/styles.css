@@ -238,6 +238,7 @@ button { cursor: pointer; touch-action: manipulation; }
   background: var(--surface);
   border: 1px solid rgba(212, 175, 55, 0.1);
   border-radius: 8px;
+  padding-bottom: 250px; /* Large gap specifically for last row dropdowns */
 }
 
 table {
@@ -245,7 +246,6 @@ table {
   border-collapse: collapse;
   min-width: 600px;
   color: var(--ink);
-  margin-bottom: 150px; /* Extra large gap to ensure dropdowns are never cut off */
 }
 
 th, td {
