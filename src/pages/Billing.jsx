@@ -26,8 +26,7 @@ const Billing = ({ orders, menu, onMarkPaid }) => {
     if (!o) return <div className="empty">Select an order to review its bill.</div>;
 
     const subtotal = orderTotal(o);
-    const tax = Math.max(0, (subtotal - discount) * 0.05); // Reduced tax for local stall
-    const total = subtotal - discount + tax;
+    const total = subtotal - discount;
 
     return (
       <>
@@ -67,8 +66,7 @@ const Billing = ({ orders, menu, onMarkPaid }) => {
               />
             </div>
           </div>
-          <div className="summary-line"><span>Sales tax (5%)</span><b className="tabular-nums">Rs. {tax.toFixed(2)}</b></div>
-          <div className="summary-line total"><span>Grand total</span><span className="tabular-nums">Rs. {total.toFixed(2)}</span></div>
+          <div className="summary-line total"><span>Grand total</span><span className="tabular-nums">Rs. {total.toFixed(0)}</span></div>
         </div>
         <div className="bill-actions">
           {!o.paid && <button className="button button-primary" onClick={() => onMarkPaid(o.id)}>Mark as paid</button>}
