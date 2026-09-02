@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from 'react';
 
 const CustomSelect = ({ options, value, onChange, placeholder = "Select option", className = "" }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [openUpwards, setOpenUpwards] = useState(false);
   const containerRef = useRef(null);
 
   const selectedOption = options.find(opt => opt.value === value) || null;
@@ -17,21 +16,11 @@ const CustomSelect = ({ options, value, onChange, placeholder = "Select option",
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const toggleDropdown = () => {
-    if (!isOpen && containerRef.current) {
-      const rect = containerRef.current.getBoundingClientRect();
-      const spaceBelow = window.innerHeight - rect.bottom;
-      // If less than 250px space below, open upwards
-      setOpenUpwards(spaceBelow < 250);
-    }
-    setIsOpen(!isOpen);
-  };
-
   return (
     <div className={`custom-select-container ${className}`} ref={containerRef}>
       <div
         className={`select-trigger ${isOpen ? 'open' : ''}`}
-        onClick={toggleDropdown}
+        onClick={() => setIsOpen(!isOpen)}
       >
         <div className="trigger-content">
           <span>{selectedOption ? selectedOption.label : placeholder}</span>
@@ -44,7 +33,6 @@ const CustomSelect = ({ options, value, onChange, placeholder = "Select option",
       {isOpen && (
         <div
           className="select-dropdown"
-          style={openUpwards ? { top: 'auto', bottom: 'calc(100% + 6px)' } : {}}
           onWheel={(e) => e.stopPropagation()}
           onTouchMove={(e) => e.stopPropagation()}
         >
