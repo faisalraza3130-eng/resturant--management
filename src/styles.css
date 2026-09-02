@@ -89,7 +89,14 @@ button { cursor: pointer; touch-action: manipulation; }
 .nav button:hover { background: rgba(255,255,255,.07); color: #fff; }
 .nav button.active { color: #fff; background: var(--navy-2); box-shadow: inset 3px 0 0 var(--accent); }
 .nav svg { width: 17px; height: 17px; opacity: .9; }
-.sidebar-bottom { margin-top: auto; border-top: 1px solid rgba(255,255,255,.1); padding: 17px 10px 0; color: #a9b6c7; font-size: 12px; }
+.sidebar-bottom {
+  margin-top: auto;
+  border-top: 1px solid rgba(255,255,255,.1);
+  padding: 17px 10px 24px; /* Added bottom padding */
+  color: #a9b6c7;
+  font-size: 12px;
+  flex-shrink: 0;
+}
 .status-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #43c895; margin-right: 7px; }
 .main {
   min-width: 0;
@@ -282,6 +289,17 @@ tbody tr:hover { background: rgba(212, 175, 55, 0.03); }
   padding: 24px 16px; display: flex; flex-direction: column;
   border-right: 1px solid rgba(212, 175, 55, 0.1);
   transition: transform 0.3s ease, width 0.3s ease;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Slim scrollbar for sidebar */
+.sidebar::-webkit-scrollbar {
+  width: 4px;
+}
+.sidebar::-webkit-scrollbar-thumb {
+  background: rgba(212, 175, 55, 0.2);
+  border-radius: 10px;
 }
 
 @media (min-width: 1025px) {
