@@ -525,7 +525,9 @@ th, td {
 }
 td { font-size: 12px; }
 tbody tr:last-child td { border-bottom: 0; }
+tbody tr { position: relative; }
 tbody tr:hover { background: #fcfdff; }
+tbody tr:focus-within { z-index: 1001; }
 .order-id { font-weight: 700; color: var(--navy); }
 .muted { color: var(--muted); }
 .badge {
@@ -559,15 +561,11 @@ tbody tr:hover { background: #fcfdff; }
   border-radius: 20px;
   border: 1px solid transparent;
   position: relative;
-  z-index: 10; /* Added higher base z-index */
-}
-
-.status-badge-wrap:focus-within {
-  z-index: 1001; /* Lift above everything when interacting */
 }
 
 .status-badge-wrap .custom-select-container {
   min-width: 110px;
+  position: static; /* Allow dropdown to position relative to wrap/row */
 }
 
 .status-badge-wrap .select-trigger {
@@ -766,14 +764,14 @@ tbody tr:hover { background: #fcfdff; }
   top: calc(100% + 6px);
   left: 0;
   right: 0;
-  background: #fff;
+  background: #ffffff !important; /* Ensure solid white */
   border: 1px solid var(--line);
   border-radius: 12px;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2); /* Stronger shadow */
-  z-index: 1000;
-  overflow-y: auto; /* Changed from visible */
-  max-height: 220px; /* Added max height */
-  overscroll-behavior: contain; /* Prevents parent scroll */
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.25); /* Even stronger shadow */
+  z-index: 2000;
+  overflow-y: auto;
+  max-height: 220px;
+  overscroll-behavior: contain;
   padding: 6px;
 }
 
