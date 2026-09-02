@@ -8,11 +8,18 @@ const Billing = ({ orders, menu, onMarkPaid }) => {
   );
   const [discount, setDiscount] = useState(0);
   const [paymentMethod, setPaymentMethod] = useState('Cash');
+  const [search, setSearch] = useState('');
 
   const itemById = id => menu.find(item => item.id === id);
   const orderTotal = order => order.items.reduce((sum, line) => sum + (itemById(line.menuId)?.price || 0) * line.qty, 0);
 
   const openOrders = orders.filter(o => !o.paid && o.status !== 'Cancelled');
+
+  const filteredOpenOrders = openOrders.filter(o =>
+    o.id.toLowerCase().includes(search.toLowerCase()) ||
+    o.label.toLowerCase().includes(search.toLowerCase())
+  );
+
   const selectedOrder = orders.find(o => o.id === selectedOrderId);
 
   const paymentOptions = [
@@ -82,20 +89,37 @@ const Billing = ({ orders, menu, onMarkPaid }) => {
       </div>
       <div className="billing-layout">
         <div className="card bill-list">
-          <div className="card-title"><h3>Open checks</h3><span className="badge info">{openOrders.length} checks</span></div>
+          <div className="card-title">
+            <h3>Open checks</h3>
+            <span className="badge info">{openOrders.length} total</span>
+          </div>
+
+          <div className="search" style={{ padding: '0 15px 15px' }}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="10.7" cy="10.7" r="6.7"/><path d="m16 16 5 5"/>
+            </svg>
+            <input
+              className="input"
+              placeholder="Search ID or Table..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              style={{ fontSize: '13px' }}
+            />
+          </div>
+
           <div className="table-wrap" style={{ border: 'none' }}>
             <table>
               <thead><tr><th>Order</th><th className="text-right">Balance</th></tr></thead>
               <tbody>
-                {openOrders.length > 0 ? (
-                  openOrders.map(o => (
+                {filteredOpenOrders.length > 0 ? (
+                  filteredOpenOrders.map(o => (
                     <tr key={o.id} className={o.id === selectedOrderId ? 'active' : ''} onClick={() => setSelectedOrderId(o.id)} style={{ cursor: 'pointer' }}>
                       <td data-label="Order"><div className="font-medium">{o.id}</div><div className="muted" style={{ fontSize: '10px' }}>{o.label} · {o.time}</div></td>
                       <td data-label="Balance" className="text-right tabular-nums font-medium">Rs. {orderTotal(o)}</td>
                     </tr>
                   ))
                 ) : (
-                  <tr><td colSpan="2" className="empty">All checks paid.</td></tr>
+                  <tr><td colSpan="2" className="empty" style={{ padding: '40px' }}>No matching orders.</td></tr>
                 )}
               </tbody>
             </table>
