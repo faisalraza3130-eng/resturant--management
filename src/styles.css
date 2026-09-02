@@ -763,16 +763,25 @@ tbody tr:focus-within { z-index: 1001; }
   position: absolute;
   top: calc(100% + 6px);
   left: 0;
-  right: 0;
-  background: #ffffff !important; /* Ensure solid white */
+  min-width: 150px; /* Forced minimum width */
+  background: #ffffff !important;
   border: 1px solid var(--line);
   border-radius: 12px;
-  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.25); /* Even stronger shadow */
-  z-index: 2000;
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.25);
+  z-index: 9999 !important; /* Absolute top layer */
   overflow-y: auto;
-  max-height: 220px;
+  max-height: 180px; /* Compact height for 4-5 items */
   overscroll-behavior: contain;
   padding: 6px;
+}
+
+/* Custom internal scrollbar for dropdown */
+.select-dropdown::-webkit-scrollbar {
+  width: 4px;
+}
+.select-dropdown::-webkit-scrollbar-thumb {
+  background: rgba(198, 120, 53, 0.3);
+  border-radius: 10px;
 }
 
 .select-option {
