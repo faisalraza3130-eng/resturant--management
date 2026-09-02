@@ -183,6 +183,7 @@ export default function App() {
     if (editingOrder) {
       // Update existing order
       setOrders(orders.map(o => o.id === editingOrder.id ? { ...o, ...data } : o));
+      setAllOrders(allOrders.map(o => o.id === editingOrder.id ? { ...o, ...data } : o));
       showToast(`Order ${editingOrder.id} updated.`);
     } else {
       // Create new order
@@ -242,11 +243,13 @@ export default function App() {
 
   const handleStatusChange = (id, status) => {
     setOrders(orders.map(o => o.id === id ? { ...o, status } : o));
+    setAllOrders(allOrders.map(o => o.id === id ? { ...o, status } : o));
     showToast(`${id} updated.`);
   };
 
   const handleMarkPaid = (id) => {
     setOrders(orders.map(o => o.id === id ? { ...o, paid: true, status: 'Completed' } : o));
+    setAllOrders(allOrders.map(o => o.id === id ? { ...o, paid: true, status: 'Completed' } : o));
     showToast(`${id} marked as paid.`);
   };
 
