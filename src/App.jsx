@@ -19,6 +19,8 @@ import ExpenseModal from './components/ExpenseModal';
 import StockModal from './components/StockModal';
 import AlertModal from './components/AlertModal';
 import HistoryModal from './components/HistoryModal';
+import ConfirmationModal from './components/ConfirmationModal';
+import { App as CapacitorApp } from '@capacitor/app';
 
 import {
   getFormattedDate, getFormattedTime, getISODate
@@ -74,6 +76,24 @@ export default function App() {
 
   const [toast, setToast] = useState({ show: false, message: '' });
   const [alert, setAlert] = useState({ show: false, title: '', message: '' });
+  const [showExitModal, setShowExitModal] = useState(false);
+
+  useEffect(() => {
+    const backListener = CapacitorApp.addListener('backButton', ({ canGoBack }) => {
+      // Sub-page logic
+      if (navigationHistory.length > 0) {
+        handleBack();
+      }
+      // Dashboard logic
+      else if (currentPage === 'dashboard') {
+        setShowExitModal(true);
+      }
+    });
+
+    return () => {
+      backListener.then(l => l.remove());
+    };
+  }, [navigationHistory, currentPage]);
 
   const normalizeLabel = (label) => {
     return label
@@ -314,6 +334,13 @@ export default function App() {
         onClose={() => setAlert({ ...alert, show: false })}
         title={alert.title}
         message={alert.message}
+      />
+      <ConfirmationModal
+        isOpen={showExitModal}
+        onClose={() => setShowExitModal(false)}
+        onConfirm={() => CapacitorApp.exitApp()}
+        title="Exit App"
+        message="Do you want to exit this app?"
       />
     </div>
   );
